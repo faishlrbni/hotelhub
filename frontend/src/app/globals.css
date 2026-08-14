@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import '../styles/tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-text: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+    --bg-canvas: var(--color-background-background-gray-bg-secondary, #F9FAFB);
+    --bg-left-panel: var(--color-background-background-gray-bg-secondary_subtle, #FAFAFA);
+    --bg-right-panel: var(--color-background-background-gray-bg-primary, #FFFFFF);
+    --bg-card: var(--color-background-background-gray-bg-primary, #FFFFFF);
+    --bg-input: var(--color-background-background-gray-bg-primary, #FFFFFF);
+    --bg-pill: #FFFFFF;
+    --border-color: var(--color-border-border-gray-border-secondary, #E5E7EB);
+    --text-display: var(--color-text-text-gray-text-display, #0B0D12);
+    --text-primary: var(--color-text-text-gray-text-primary, #181D27);
+    --text-secondary: var(--color-text-text-gray-text-secondary, #414651);
+    --text-tertiary: var(--color-text-text-gray-text-tertiary, #717680);
+    --brand-primary: var(--color-text-text-color-text-brand-primary, #FF385C);
+    --brand-primary-hover: var(--color-background-background-color-bg-brand-solid_hover, #E00B41);
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    --pill-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark, [data-theme='dark'] {
+    --bg-canvas: var(--color-background-background-gray-bg-primary, #0C0E12);
+    --bg-left-panel: var(--color-background-background-gray-bg-secondary, #14161B);
+    --bg-right-panel: var(--color-background-background-gray-bg-primary, #0C0E12);
+    --bg-card: var(--color-background-background-gray-bg-secondary, #14161B);
+    --bg-input: #090B0E;
+    --bg-pill: #1D212A;
+    --border-color: var(--color-background-background-gray-bg-tertiary, #22262F);
+    --text-display: var(--color-text-text-gray-text-display, #FFFFFF);
+    --text-primary: var(--color-text-text-gray-text-primary, #F7F7F7);
+    --text-secondary: var(--color-text-text-gray-text-secondary, #CEE3FF);
+    --text-tertiary: var(--color-text-text-gray-text-tertiary, #94969C);
+    --brand-primary: var(--color-background-background-color-bg-brand-primary, #FF385C);
+    --brand-primary-hover: #E52D4E;
+    --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --pill-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}

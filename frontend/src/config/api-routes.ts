@@ -1,0 +1,86 @@
+// HotelHub API Endpoints Mapping (from PRD §15.2)
+
+export const API_ROUTES = {
+  AUTH: {
+    LOGIN: '/api/v1/login',
+    LOGOUT: '/api/v1/logout',
+    FORGOT_PASSWORD: '/api/v1/forgot-password',
+    ME: '/api/v1/me',
+  },
+  DASHBOARD: {
+    KPIS: '/api/v1/dashboard/kpis',
+    BOOKING_TREND: '/api/v1/dashboard/booking-trend',
+    REVENUE_TREND: '/api/v1/dashboard/revenue-trend',
+    ROOM_STATUS: '/api/v1/dashboard/room-status',
+    REVENUE_SOURCES: '/api/v1/dashboard/revenue-sources',
+    OCCUPANCY_HEATMAP: '/api/v1/dashboard/occupancy-heatmap',
+  },
+  RESERVATIONS: {
+    BASE: '/api/v1/reservations',
+    DETAIL: (id: string) => `/api/v1/reservations/${id}`,
+    CHECK_IN: (id: string) => `/api/v1/reservations/${id}/check-in`,
+    CHECK_OUT: (id: string) => `/api/v1/reservations/${id}/check-out`,
+    BULK: '/api/v1/reservations/bulk',
+  },
+  GUESTS: {
+    BASE: '/api/v1/guests',
+    DETAIL: (id: string) => `/api/v1/guests/${id}`,
+    BOOKINGS: (id: string) => `/api/v1/guests/${id}/bookings`,
+    SPENDING: (id: string) => `/api/v1/guests/${id}/spending`,
+    NOTES: (id: string) => `/api/v1/guests/${id}/notes`,
+  },
+  ROOMS: {
+    BASE: '/api/v1/rooms',
+    DETAIL: (id: string) => `/api/v1/rooms/${id}`,
+    TYPES: '/api/v1/room-types',
+    STATUS: (id: string) => `/api/v1/rooms/${id}/status`,
+    MAINTENANCE: (id: string) => `/api/v1/rooms/${id}/maintenance`,
+  },
+  HOUSEKEEPING: {
+    QUEUE: '/api/v1/housekeeping/queue',
+    ASSIGN_TASK: (id: string) => `/api/v1/housekeeping/tasks/${id}/assign`,
+    UPDATE_PROGRESS: (id: string) => `/api/v1/housekeeping/tasks/${id}/progress`,
+    INSPECT_TASK: (id: string) => `/api/v1/housekeeping/tasks/${id}/inspect`,
+  },
+  REVENUE: {
+    METRICS: '/api/v1/revenue/metrics',
+    FORECAST: '/api/v1/revenue/forecast',
+    PRICING_SUGGESTIONS: '/api/v1/revenue/pricing-suggestions',
+    ACCEPT_SUGGESTION: (id: string) => `/api/v1/revenue/pricing-suggestions/${id}/accept`,
+    BULK_ACCEPT: '/api/v1/revenue/pricing-suggestions/bulk-accept',
+  },
+  MARKETING: {
+    PROMOTIONS: '/api/v1/promotions',
+    COUPON_ANALYTICS: (code: string) => `/api/v1/coupons/${code}/analytics`,
+    BOOKING_SOURCES: '/api/v1/marketing/booking-sources',
+    CAMPAIGNS: '/api/v1/campaigns',
+    CAMPAIGN_ROI: (id: string) => `/api/v1/campaigns/${id}/roi`,
+  },
+  REVIEWS: {
+    BASE: '/api/v1/reviews',
+    DETAIL: (id: string) => `/api/v1/reviews/${id}`,
+    RESPOND: (id: string) => `/api/v1/reviews/${id}/respond`,
+    SENTIMENT_SUMMARY: '/api/v1/reviews/sentiment-summary',
+  },
+  ANALYTICS: {
+    REVENUE: '/api/v1/analytics/revenue',
+    BOOKINGS: '/api/v1/analytics/bookings',
+    DEMOGRAPHICS: '/api/v1/analytics/demographics',
+    COUNTRIES: '/api/v1/analytics/countries',
+    CANCELLATIONS: '/api/v1/analytics/cancellations',
+    SEASONALITY: '/api/v1/analytics/seasonality',
+  },
+  AI: {
+    INSIGHTS: '/api/v1/ai/insights',
+    OCCUPANCY_FORECAST: '/api/v1/ai/forecast/occupancy',
+    DAILY_REPORTS: '/api/v1/ai/reports/daily',
+    REPORT_DETAIL: (id: string) => `/api/v1/ai/reports/${id}`,
+    ALERTS: '/api/v1/ai/alerts',
+    DISMISS_ALERT: (id: string) => `/api/v1/ai/alerts/${id}/dismiss`,
+  },
+  SETTINGS: {
+    PROPERTY: '/api/v1/settings/property',
+    USERS: '/api/v1/settings/users',
+    INTEGRATIONS: '/api/v1/settings/integrations',
+  },
+};
