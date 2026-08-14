@@ -1,8 +1,9 @@
 {
-  "name": "hotelhub-root",
+  "name": "hotelhub",
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "cd frontend && npm install",
     "dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
     "start": "cd frontend && npm run start"
