@@ -10,49 +10,162 @@ import {
   ExternalLink,
   TrendingUp,
   Bed,
-  DollarSign
+  DollarSign,
+  CheckCircle2,
+  X,
+  Copy,
+  Mail,
+  FileText,
+  Check,
+  Loader2,
+  BarChart3,
+  Bot
 } from 'lucide-react';
 import { KpiCard } from '@/components/ui/kpi-card';
 import { SectionCard } from '@/components/ui/section-card';
+import { useHotelStore } from '@/lib/store';
 
 export default function DashboardOverviewPage() {
-  return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto min-h-screen">
-          
-          {/* Welcome Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
-                Tuesday, 21 July 2026 · Aris Hotel Bali
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)] tracking-tight">
-                Good afternoon, Operations Team.
-              </h1>
-              <p className="text-xs text-[var(--text-tertiary)] mt-1 font-medium">
-                Everything is on track for today's arrivals. Here's what's happening across your property.
-              </p>
-            </div>
+  const store = useHotelStore() as any;
+  const activeProperty = store?.activeProperty;
+  const session = store?.session;
+  const reservations = store?.reservations || [];
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-3 shrink-0">
-              <button
-                type="button"
-                style={{ borderRadius: '10px' }}
-                className="h-9 px-4 text-xs font-semibold bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
-              >
-                <Download className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
-                <span>Export Report</span>
-              </button>
-              <button
-                type="button"
-                style={{ borderRadius: '10px' }}
-                className="h-9 px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Generate AI Report</span>
-              </button>
-            </div>
-          </div>
+  const [isExporting, setIsExporting] = useState(false);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [showAIModal, setShowAIModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // 1. Export Property Operations CSV Report
+  const handleExportReport = () => {
+    setIsExporting(true);
+
+    const propertyName = activeProperty?.name || 'Aria Hotel Bali';
+    const csvRows = [
+      ['HOTELHUB EXECUTIVE PROPERTY OPERATIONS REPORT'],
+      ['Generated Date', new Date().toLocaleDateString('en-US', { dateStyle: 'full' })],
+      ['Property Name', propertyName],
+      ['Active Manager', session?.name || 'Aris Setiawan'],
+      [''],
+      ['KPI METRIC', 'CURRENT VALUE', 'BENCHMARK / TREND'],
+      ['Occupancy Rate', '78.4%', '+4.2% vs Monthly Target'],
+      ['Total Revenue MTD', 'Rp 184,200,000', '+6.1% MoM'],
+      ['ADR (Avg Daily Rate)', 'Rp 1,120,000', '+1.5% Rate Lift'],
+      ['Available Rooms', '26 Rooms', 'Clean & Ready for Check-in'],
+      [''],
+      ['RESERVATIONS LIST'],
+      ['Ref Code', 'Guest Name', 'Category', 'Check In', 'Check Out', 'Nights', 'Total Payment', 'Status'],
+      ...(reservations || []).map((r: any) => [
+        r.ref || `#RES-${r.id}`,
+        `"${r.guestName || r.guest || 'Guest'}"`,
+        `"${r.category || r.roomType || 'Standard Room'}"`,
+        r.checkIn || '2026-07-21',
+        r.checkOut || '2026-07-23',
+        r.nights || 2,
+        `"Rp ${(r.totalPrice || r.payment || 1480000).toLocaleString()}"`,
+        r.status || 'Confirmed'
+      ])
+    ];
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((e) => e.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `HotelHub-Executive-Report-${propertyName.replace(/\s+/g, '-')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      setIsExporting(false);
+      setToastMessage('✓ Property Executive Report exported successfully (HotelHub-Executive-Report.csv)');
+      setTimeout(() => setToastMessage(''), 4500);
+    }, 400);
+  };
+
+  // 2. Generate AI Operations & Revenue Intelligence Report
+  const handleGenerateAIReport = () => {
+    setIsGeneratingAI(true);
+    setShowAIModal(true);
+
+    setTimeout(() => {
+      setIsGeneratingAI(false);
+    }, 900);
+  };
+
+  const copyAISummary = () => {
+    const text = `HOTELHUB AI EXECUTIVE BRIEFING (${activeProperty?.name || 'Aria Hotel Bali'})
+Property Health Score: 94/100 (Optimal Operations)
+
+Key Insights:
+• Occupancy Rate: 78.4% (+4.2% over target). Peak weekend demand approaching.
+• Revenue MTD: Rp 184.2M (+6.1% MoM). Direct bookings up 14%.
+• ADR Performance: Rp 1.12M (+1.5% dynamic rate lift).
+
+Strategic Action Recommendations:
+1. Dynamic Surge Pricing: Boost Deluxe & Ocean Suite rates by 12% for upcoming weekend.
+2. VIP Housekeeping Priority: Dispatch 2 staff to 3rd floor at 14:00 for VIP arrivals.
+3. Cancellation Shield: Auto-confirm deposit on 3 pending OTA reservations.`;
+
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  return (
+    <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto min-h-screen relative">
+      
+      {/* Toast Notification Banner */}
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in slide-in-from-top-3 duration-300">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Welcome Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
+            Tuesday, 21 July 2026 · {activeProperty?.name || 'Aria Hotel Bali'}
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)] tracking-tight">
+            Good afternoon, {session?.name || 'Operations Team'}.
+          </h1>
+          <p className="text-xs text-[var(--text-tertiary)] mt-1 font-medium">
+            Everything is on track for today's arrivals. Here's what's happening across your property.
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={handleExportReport}
+            disabled={isExporting}
+            style={{ borderRadius: '10px' }}
+            className="h-9 px-4 text-xs font-semibold bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-[0.98] disabled:opacity-70"
+          >
+            {isExporting ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#FF385C]" />
+            ) : (
+              <Download className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
+            )}
+            <span>Export Report</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleGenerateAIReport}
+            style={{ borderRadius: '10px' }}
+            className="h-9 px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-[0_4px_14px_rgba(255,56,92,0.35)] flex items-center gap-1.5 transition-all cursor-pointer active:scale-[0.98]"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Generate AI Report</span>
+          </button>
+        </div>
+      </div>
 
           {/* 4 KPI Metrics Grid (Reusable Component Standard) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
@@ -788,6 +901,192 @@ export default function DashboardOverviewPage() {
             </SectionCard>
 
           </div>
+
+      {/* --- AI EXECUTIVE REPORT MODAL --- */}
+      {showAIModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div 
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-2xl bg-[var(--bg-card)] border border-black/10 dark:border-white/15 p-6 sm:p-8 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-[#FF385C] text-white flex items-center justify-center shadow-md shrink-0">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-[var(--text-display)]">
+                    AI Operations & Revenue Briefing
+                  </h3>
+                  <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
+                    Live Audit · {activeProperty?.name || 'Aria Hotel Bali'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAIModal(false)}
+                className="p-1.5 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {isGeneratingAI ? (
+              <div className="py-16 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-full border-4 border-[#FF385C]/20 border-t-[#FF385C] animate-spin" />
+                  <Sparkles className="w-6 h-6 text-[#FF385C] absolute inset-0 m-auto animate-pulse" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-[var(--text-primary)]">Generating Live AI Insights...</h4>
+                  <p className="text-xs text-[var(--text-tertiary)] mt-1">Analyzing 120 rooms, 78.4% occupancy rate, and market RevPAR trends...</p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-6 text-xs text-[var(--text-primary)]">
+                
+                {/* Health Score Banner */}
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/20 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white font-black text-sm flex items-center justify-center shadow-xs shrink-0">
+                      94
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-[var(--text-display)]">Property Health: Excellent (94/100)</div>
+                      <div className="text-[11px] text-[var(--text-tertiary)]">Occupancy +4.2% over target · ADR rate lift active</div>
+                    </div>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[11px] shrink-0">
+                    Optimal Performance
+                  </span>
+                </div>
+
+                {/* Key Insights Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08]">
+                    <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
+                      Occupancy Velocity
+                    </span>
+                    <div className="text-base font-extrabold text-[var(--text-display)]">78.4%</div>
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">+4.2% vs target</span>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08]">
+                    <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
+                      RevPAR Rate Lift
+                    </span>
+                    <div className="text-base font-extrabold text-[var(--text-display)]">Rp 1.12M</div>
+                    <span className="text-[11px] text-[#387FF7] font-semibold">+1.5% daily yield</span>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08]">
+                    <span className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
+                      Ready Inventory
+                    </span>
+                    <div className="text-base font-extrabold text-[var(--text-display)]">26 Rooms</div>
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">100% Inspected</span>
+                  </div>
+                </div>
+
+                {/* Strategic AI Recommendations */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-bold text-[var(--text-tertiary)] uppercase tracking-wider">
+                    Strategic AI Action Recommendations
+                  </h4>
+
+                  <div className="space-y-2.5">
+                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-lg bg-[#FF385C]/10 text-[#FF385C] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        1
+                      </div>
+                      <div>
+                        <div className="font-bold text-[var(--text-primary)] text-xs">
+                          Dynamic Surge Pricing Adjustment
+                        </div>
+                        <div className="text-[11px] text-[var(--text-tertiary)] mt-0.5 leading-relaxed">
+                          Local Bali luxury region demand is pacing at 92%. Recommend boosting Ocean View Suite rates by +12% for the upcoming Friday–Sunday stretch.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-lg bg-[#387FF7]/10 text-[#387FF7] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        2
+                      </div>
+                      <div>
+                        <div className="font-bold text-[var(--text-primary)] text-xs">
+                          VIP Arrival & Housekeeping Priority
+                        </div>
+                        <div className="text-[11px] text-[var(--text-tertiary)] mt-0.5 leading-relaxed">
+                          2 VIP Platinum guests (Sarah Jenkins & Michael Torres) arrive at 14:00. Prioritize inspections for Deluxe Room 301 and Executive Suite 405.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3">
+                      <div className="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                        3
+                      </div>
+                      <div>
+                        <div className="font-bold text-[var(--text-primary)] text-xs">
+                          OTA Booking Deposit Protection
+                        </div>
+                        <div className="text-[11px] text-[var(--text-tertiary)] mt-0.5 leading-relaxed">
+                          3 unconfirmed OTA bookings scheduled for weekend check-in. Automated pre-arrival deposit request sent to lower cancellation risk by 18%.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modal Footer Action Buttons */}
+                <div className="pt-4 border-t border-black/[0.06] dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={copyAISummary}
+                      style={{ borderRadius: '10px' }}
+                      className="px-3.5 py-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-[var(--text-primary)] font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{copied ? 'Copied to Clipboard!' : 'Copy Summary'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setToastMessage('✓ AI Executive Report sent to manager email.');
+                        setTimeout(() => setToastMessage(''), 4000);
+                      }}
+                      style={{ borderRadius: '10px' }}
+                      className="px-3.5 py-2 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-[var(--text-primary)] font-semibold text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Mail className="w-3.5 h-3.5 text-[#387FF7]" />
+                      <span>Email Report</span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleExportReport();
+                      setShowAIModal(false);
+                    }}
+                    style={{ borderRadius: '10px' }}
+                    className="px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white font-bold text-xs transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download Full CSV</span>
+                  </button>
+                </div>
+
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );

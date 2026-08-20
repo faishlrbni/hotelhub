@@ -43,43 +43,89 @@ const RATE_PLANS: RatePlanItem[] = [
 export default function RevenuePage() {
   const [activeTab, setActiveTab] = useState<'ai' | 'trends' | 'matrix'>('ai');
 
+  const [isExporting, setIsExporting] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const handleExportReport = () => {
+    setIsExporting(true);
+    const csvRows = [
+      ['HOTELHUB REVENUE & YIELD MANAGEMENT REPORT'],
+      ['Generated Date', new Date().toLocaleDateString('en-US', { dateStyle: 'full' })],
+      [''],
+      ['RATE PLAN CATEGORY', 'ROOMS', 'BASE RATE', 'DYNAMIC RATE', 'OCCUPANCY', 'YIELD STATUS'],
+      ...RATE_PLANS.map((r) => [
+        `"${r.category}"`,
+        r.roomsCount,
+        `"${r.baseRate}"`,
+        `"${r.dynamicRate}"`,
+        `"${r.occupancy}"`,
+        r.status
+      ])
+    ];
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((e) => e.join(',')).join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'HotelHub-Revenue-Yield-Report.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    setTimeout(() => {
+      setIsExporting(false);
+      setToastMessage('✓ Revenue Yield Report exported successfully.');
+      setTimeout(() => setToastMessage(''), 4000);
+    }, 400);
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
           
-          {/* Header Block */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
-                Yield Management & Revenue Operations
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)] tracking-tight">
-                Revenue & Yield Management
-              </h1>
-              <p className="text-xs text-[var(--text-tertiary)] mt-1 font-medium">
-                AI-driven rate recommendations & yield optimization.
-              </p>
-            </div>
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
-            {/* Top Action Buttons */}
-            <div className="flex items-center gap-3 shrink-0">
-              <button
-                type="button"
-                style={{ borderRadius: '10px' }}
-                className="h-9 px-4 py-2 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
-              >
-                <Download className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
-                <span>Export report</span>
-              </button>
-              <button
-                type="button"
-                style={{ borderRadius: '10px' }}
-                className="h-9 px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-[0_4px_14px_rgba(255,56,92,0.35)] hover:shadow-[0_6px_20px_rgba(255,56,92,0.45)] flex items-center gap-1.5 transition-all cursor-pointer"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Create promotion</span>
-              </button>
-            </div>
-          </div>
+      {/* Header Block */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
+            Yield Management & Revenue Operations
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)] tracking-tight">
+            Revenue & Yield Management
+          </h1>
+          <p className="text-xs text-[var(--text-tertiary)] mt-1 font-medium">
+            AI-driven rate recommendations & yield optimization.
+          </p>
+        </div>
+
+        {/* Top Action Buttons */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={handleExportReport}
+            disabled={isExporting}
+            style={{ borderRadius: '10px' }}
+            className="h-9 px-4 py-2 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+          >
+            <Download className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
+            <span>Export report</span>
+          </button>
+
+          <button
+            type="button"
+            style={{ borderRadius: '10px' }}
+            className="h-9 px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-[0_4px_14px_rgba(255,56,92,0.35)] flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Create promotion</span>
+          </button>
+        </div>
+      </div>
 
           {/* 4 Top KPI Metric Cards (Reusable Component Standard) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
