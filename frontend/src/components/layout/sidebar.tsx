@@ -101,12 +101,12 @@ export function Sidebar() {
                   collapsed ? 'justify-center w-10 h-10 mx-auto p-0 hover:scale-105' : 'gap-3 px-3.5 py-2.5 hover:translate-x-1'
                 } ${
                   isActive
-                    ? 'bg-[#8C0020] text-white dark:bg-[#3D0A14] dark:text-[#FF385C] font-semibold shadow-xs'
+                    ? 'bg-[#FF385C] text-white font-bold shadow-[0_4px_14px_rgba(255,56,92,0.35)]'
                     : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04]'
                 }`}
                 title={collapsed ? item.label : undefined}
               >
-                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? 'text-white dark:text-[#FF385C]' : 'text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)]'}`} />
+                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? 'text-white' : 'text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)]'}`} />
                 {!collapsed && (
                   <span className="truncate flex-1 flex items-center justify-between">
                     <span>{item.label}</span>
