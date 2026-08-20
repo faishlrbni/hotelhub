@@ -141,6 +141,12 @@ export default function GuestsPage() {
   const [activeTab, setActiveTab] = useState<'cards' | 'activity' | 'profile'>('cards');
   const [selectedGuest, setSelectedGuest] = useState<GuestCardData>(GUESTS_DATA[0]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [guestStatusMap, setGuestStatusMap] = useState<Record<string, 'Confirmed' | 'Checked In' | 'Cancelled'>>({
+    '0567891325': 'Confirmed',
+    '0891234567': 'Confirmed',
+    '0123456789': 'Checked In',
+  });
+  const [toastMessage, setToastMessage] = useState('');
   const [notes, setNotes] = useState<string[]>([
     'The guest is allergic to dairy products. Don\'t forget to inform the restaurant staff for breakfast prep.'
   ]);
@@ -159,8 +165,17 @@ export default function GuestsPage() {
     g.tier.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const currentGuestStatus = guestStatusMap[selectedGuest.id] || 'Confirmed';
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
+      
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
           
           {/* Header Block */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -490,18 +505,42 @@ export default function GuestsPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                  <span
+                    style={{ borderRadius: '9999px' }}
+                    className={`px-3 py-1 text-xs font-bold transition-all ${
+                      currentGuestStatus === 'Checked In'
+                        ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                        : currentGuestStatus === 'Cancelled'
+                        ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                        : 'bg-[#387FF7]/15 text-[#387FF7] dark:text-[#6099F9] border border-[#387FF7]/30'
+                    }`}
+                  >
+                    Status: {currentGuestStatus}
+                  </span>
+
                   <button
                     type="button"
+                    onClick={() => {
+                      setGuestStatusMap(prev => ({ ...prev, [selectedGuest.id]: 'Cancelled' }));
+                      setToastMessage(`✓ Booking cancelled for ${selectedGuest.name}. Room inventory released.`);
+                      setTimeout(() => setToastMessage(''), 4500);
+                    }}
                     style={{ borderRadius: '10px' }}
-                    className="h-9 px-4 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-semibold hover:bg-rose-500/20 transition-all cursor-pointer flex items-center gap-1.5"
+                    className="h-9 px-4 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-semibold hover:bg-rose-500/20 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
                   >
                     <XCircle className="w-3.5 h-3.5" />
                     <span>Cancel Booking</span>
                   </button>
+                  
                   <button
                     type="button"
+                    onClick={() => {
+                      setGuestStatusMap(prev => ({ ...prev, [selectedGuest.id]: 'Checked In' }));
+                      setToastMessage(`✓ Guest Check-In processed successfully for ${selectedGuest.name}! Assigned to ${selectedGuest.room}.`);
+                      setTimeout(() => setToastMessage(''), 4500);
+                    }}
                     style={{ borderRadius: '10px' }}
-                    className="h-9 px-4 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
+                    className="h-9 px-4 bg-[#FF385C] hover:bg-[#E00B41] active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Guest Check-In</span>
