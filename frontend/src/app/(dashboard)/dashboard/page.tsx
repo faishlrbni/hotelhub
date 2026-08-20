@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   Sparkles,
   ArrowUpRight,
@@ -534,13 +535,13 @@ Strategic Action Recommendations:
             title="Occupancy heatmap"
             subtitle="Next 5 weeks · darker = higher occupancy"
             headerAction={
-              <button 
-                type="button" 
-                className="text-xs font-semibold text-[#FF385C] hover:underline flex items-center gap-1 cursor-pointer"
+              <Link 
+                href="/reservations/calendar" 
+                className="text-xs font-semibold text-[#FF385C] hover:underline flex items-center gap-1 cursor-pointer transition-all duration-200 hover:translate-x-0.5 active:scale-95 group"
               >
                 <span>View full calendar</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+                <ChevronRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+              </Link>
             }
           >
             {/* Days Header */}
@@ -752,9 +753,13 @@ Strategic Action Recommendations:
               title="Today's arrivals"
               subtitle="4 guests · 2 VIP"
               headerAction={
-                <button type="button" className="text-xs font-semibold text-[#FF385C] hover:underline cursor-pointer">
-                  View all
-                </button>
+                <Link 
+                  href="/reservations/checkin-checkout" 
+                  className="text-xs font-semibold text-[#FF385C] hover:underline cursor-pointer transition-all duration-200 hover:translate-x-0.5 active:scale-95 inline-flex items-center gap-1 group"
+                >
+                  <span>View all</span>
+                  <ChevronRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </Link>
               }
             >
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   BarChart3,
   TrendingUp,
@@ -191,13 +192,13 @@ export default function AnalyticsPage() {
                 </button>
               ))}
             </div>
-            <button
-              type="button"
-              className="text-xs font-semibold text-[#387FF7] dark:text-[#6099F9] hover:underline flex items-center gap-1 cursor-pointer"
+            <Link
+              href="/ai/reports"
+              className="text-xs font-semibold text-[#387FF7] dark:text-[#6099F9] hover:underline flex items-center gap-1 cursor-pointer transition-all hover:translate-x-0.5 active:scale-95 group"
             >
               <span>View all</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
         }
       >
