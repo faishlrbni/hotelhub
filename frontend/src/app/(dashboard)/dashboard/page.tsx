@@ -997,7 +997,7 @@ Strategic Action Recommendations:
                   </h4>
 
                   <div className="space-y-2.5">
-                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3">
+                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3 modal-item-hover cursor-pointer">
                       <div className="w-6 h-6 rounded-lg bg-[#FF385C]/10 text-[#FF385C] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                         1
                       </div>
@@ -1011,7 +1011,7 @@ Strategic Action Recommendations:
                       </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3">
+                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3 modal-item-hover cursor-pointer">
                       <div className="w-6 h-6 rounded-lg bg-[#387FF7]/10 text-[#387FF7] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                         2
                       </div>
@@ -1025,7 +1025,7 @@ Strategic Action Recommendations:
                       </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3">
+                    <div className="p-3.5 rounded-xl bg-black/[0.02] dark:bg-white/[0.03] border border-black/[0.06] dark:border-white/[0.08] flex items-start gap-3 modal-item-hover cursor-pointer">
                       <div className="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                         3
                       </div>
