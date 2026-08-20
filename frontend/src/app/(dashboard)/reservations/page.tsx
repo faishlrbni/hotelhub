@@ -162,11 +162,18 @@ export default function ReservationsPage() {
   const [showNewModal, setShowNewModal] = useState(false);
 
   const filteredReservations = reservations.filter((res: any) => {
-    const matchesSearch = 
-      res.guestName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.ref.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.room.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      res.category.toLowerCase().includes(searchQuery.toLowerCase());
+    const guestName = (res.guestName || res.guest || '').toLowerCase();
+    const ref = (res.ref || '').toLowerCase();
+    const room = (res.room || '').toLowerCase();
+    const category = (res.category || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+
+    const matchesSearch =
+      guestName.includes(query) ||
+      ref.includes(query) ||
+      room.includes(query) ||
+      category.includes(query);
+
     const matchesStatus = statusFilter === 'All' || res.status === statusFilter;
     const matchesChannel = channelFilter === 'All' || res.channel === channelFilter;
     return matchesSearch && matchesStatus && matchesChannel;
@@ -450,14 +457,14 @@ export default function ReservationsPage() {
           <div className="divide-y divide-black/[0.04] dark:divide-white/[0.06]">
             {filteredReservations.filter((r: any) => r.status !== 'Checked Out').map((res: any) => (
               <div
-                key={res.ref}
+                key={res.ref || res.id}
                 onClick={() => setSelectedRes(res)}
                 className="py-4 flex items-center justify-between gap-4 transition-all hover:bg-black/[0.01] dark:hover:bg-white/[0.01] px-3 rounded-xl cursor-pointer group"
               >
                 <div className="truncate">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-[var(--text-primary)] truncate">
-                      {res.guest}
+                      {res.guestName || res.guest || 'Guest Name'}
                     </span>
                     {res.vip && (
                       <span 
@@ -535,7 +542,7 @@ export default function ReservationsPage() {
                 </span>
               </div>
               <h3 className="text-base font-bold text-[var(--text-display)] tracking-tight">
-                {selectedRes.guest}
+                {selectedRes.guestName || selectedRes.guest || 'Guest Name'}
               </h3>
               <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
                 Channel: {selectedRes.channel} · {selectedRes.room}
@@ -557,7 +564,7 @@ export default function ReservationsPage() {
               </div>
               <div className="flex justify-between py-2">
                 <span className="font-semibold text-[var(--text-primary)]">Total Payment:</span>
-                <span className="font-extrabold text-[#FF385C] text-sm">{selectedRes.payment}</span>
+                <span className="font-extrabold text-[#FF385C] text-sm">{selectedRes.totalPrice || selectedRes.payment || 'Rp 3,200,000'}</span>
               </div>
             </div>
 
