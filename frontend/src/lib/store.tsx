@@ -305,6 +305,16 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
 ];
 
 // --- Context State Structure ---
+export interface UserAccount {
+  name: string;
+  email: string;
+  role: string;
+  property: string;
+  password?: string;
+  avatar?: string;
+  provider?: 'email' | 'google' | 'apple';
+}
+
 interface HotelContextType {
   session: UserSession;
   setSession: React.Dispatch<React.SetStateAction<UserSession>>;
@@ -338,7 +348,10 @@ interface HotelContextType {
   markAllNotificationsRead: () => void;
   
   logout: () => void;
-  login: (email: string) => void;
+  login: (email: string, password?: string, customUser?: Partial<UserSession>) => void;
+  signup: (userData: { name: string; email: string; role?: string; property?: string; password?: string }) => void;
+  loginWithOAuth: (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => void;
+  registeredUsers: UserAccount[];
 }
 
 const HotelContext = createContext<HotelContextType | undefined>(undefined);
@@ -357,6 +370,7 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
   const [coupons, setCoupons] = useState<CouponCode[]>(INITIAL_COUPONS);
   const [reviews, setReviews] = useState<ReviewItem[]>(INITIAL_REVIEWS);
   const [notifications, setNotifications] = useState<NotificationItem[]>(INITIAL_NOTIFICATIONS);
+  const [registeredUsers, setRegisteredUsers] = useState<UserAccount[]>([]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -375,6 +389,12 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
 
       const savedCampaigns = localStorage.getItem('hotelhub_campaigns');
       if (savedCampaigns) setCampaigns(JSON.parse(savedCampaigns));
+
+      const savedUsers = localStorage.getItem('hotelhub_users');
+      if (savedUsers) setRegisteredUsers(JSON.parse(savedUsers));
+
+      const savedSession = localStorage.getItem('hotelhub_session');
+      if (savedSession) setSession(JSON.parse(savedSession));
     } catch (e) {
       console.error('LocalStorage load error:', e);
     }
@@ -388,10 +408,12 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('hotelhub_housekeeping', JSON.stringify(housekeeping));
       localStorage.setItem('hotelhub_reviews', JSON.stringify(reviews));
       localStorage.setItem('hotelhub_campaigns', JSON.stringify(campaigns));
+      localStorage.setItem('hotelhub_users', JSON.stringify(registeredUsers));
+      localStorage.setItem('hotelhub_session', JSON.stringify(session));
     } catch (e) {
       console.error('LocalStorage save error:', e);
     }
-  }, [reservations, rooms, housekeeping, reviews, campaigns]);
+  }, [reservations, rooms, housekeeping, reviews, campaigns, registeredUsers, session]);
 
   // Action Helpers
   const addReservation = (res: Omit<Reservation, 'id' | 'ref'>) => {
@@ -483,24 +505,120 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    setSession({
+    const emptySession = {
       name: '',
       email: '',
       role: '',
       avatar: '',
       property: '',
-    });
+    };
+    setSession(emptySession);
+    try {
+      localStorage.removeItem('hotelhub_session');
+    } catch (e) {}
     window.location.href = '/login';
   };
 
-  const login = (email: string) => {
-    setSession({
-      name: email.split('@')[0] || 'User',
-      email,
-      role: 'General Manager',
-      avatar: email.substring(0, 2).toUpperCase(),
-      property: activeProperty.name,
+  const login = (email: string, password?: string, customUser?: Partial<UserSession>) => {
+    const foundUser = registeredUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
+    
+    let newSession: UserSession;
+    if (customUser) {
+      newSession = {
+        name: customUser.name || 'Aris Setiawan',
+        email: customUser.email || email,
+        role: customUser.role || 'General Manager',
+        avatar: customUser.avatar || 'AS',
+        property: customUser.property || activeProperty.name,
+      };
+    } else if (foundUser) {
+      newSession = {
+        name: foundUser.name,
+        email: foundUser.email,
+        role: foundUser.role || 'General Manager',
+        avatar: foundUser.avatar || foundUser.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2),
+        property: foundUser.property || activeProperty.name,
+      };
+    } else if (email.toLowerCase().includes('sarah')) {
+      newSession = {
+        name: 'Sarah Jenkins',
+        email: 'sarah@hotelhub.com',
+        role: 'Operations Lead',
+        avatar: 'SJ',
+        property: 'Aria Hotel Bali',
+      };
+    } else if (email.toLowerCase().includes('budi')) {
+      newSession = {
+        name: 'Budi Santoso',
+        email: 'budi@hotelhub.com',
+        role: 'Front Desk Manager',
+        avatar: 'BS',
+        property: 'Ubud Luxury Villas',
+      };
+    } else {
+      const cleanName = email.split('@')[0] || 'User';
+      const capitalized = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+      newSession = {
+        name: capitalized.includes('.') ? capitalized.replace('.', ' ') : capitalized,
+        email: email,
+        role: 'General Manager',
+        avatar: email.substring(0, 2).toUpperCase(),
+        property: activeProperty.name,
+      };
+    }
+
+    setSession(newSession);
+    try {
+      localStorage.setItem('hotelhub_session', JSON.stringify(newSession));
+    } catch (e) {}
+    window.location.href = '/dashboard';
+  };
+
+  const signup = (userData: { name: string; email: string; role?: string; property?: string; password?: string }) => {
+    const newUser: UserAccount = {
+      name: userData.name,
+      email: userData.email,
+      role: userData.role || 'General Manager',
+      property: userData.property || activeProperty.name,
+      password: userData.password,
+      avatar: userData.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2),
+      provider: 'email',
+    };
+
+    setRegisteredUsers((prev) => [newUser, ...prev]);
+    login(userData.email, userData.password, {
+      name: userData.name,
+      email: userData.email,
+      role: userData.role || 'General Manager',
+      avatar: newUser.avatar,
+      property: userData.property || activeProperty.name,
     });
+  };
+
+  const loginWithOAuth = (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => {
+    let oauthSession: UserSession;
+    if (provider === 'google') {
+      oauthSession = {
+        name: accountDetails?.name || 'Aris Setiawan',
+        email: accountDetails?.email || 'aris.setiawan@gmail.com',
+        role: 'General Manager',
+        avatar: 'G',
+        property: activeProperty.name,
+      };
+    } else {
+      oauthSession = {
+        name: accountDetails?.name || 'Aris Setiawan',
+        email: accountDetails?.email || 'aris.setiawan@icloud.com',
+        role: 'General Manager',
+        avatar: '',
+        property: activeProperty.name,
+      };
+    }
+
+    setSession(oauthSession);
+    try {
+      localStorage.setItem('hotelhub_session', JSON.stringify(oauthSession));
+    } catch (e) {}
     window.location.href = '/dashboard';
   };
 
@@ -532,6 +650,9 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
         markAllNotificationsRead,
         logout,
         login,
+        signup,
+        loginWithOAuth,
+        registeredUsers,
       }}
     >
       {children}
