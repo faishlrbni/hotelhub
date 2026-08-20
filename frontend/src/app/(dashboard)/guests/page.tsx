@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Calendar,
   DollarSign,
+  Download,
   Coffee,
   Wine,
   Sparkles,
@@ -699,45 +700,108 @@ export default function GuestsPage() {
                         Payments & Ledger
                       </h3>
                       <p className="text-xs text-[var(--text-tertiary)] mt-0.5">
-                        All guest charges for the current stay
+                        All guest charges & folio transactions for current stay
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      style={{ borderRadius: '10px' }}
-                      className="h-8 px-3 bg-[var(--bg-left-panel)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-black/[0.03] flex items-center gap-1 cursor-pointer"
-                    >
-                      <Filter className="w-3 h-3" />
-                      <span>Filters</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        style={{ borderRadius: '10px' }}
+                        className="h-8 px-3 bg-[var(--bg-left-panel)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                      >
+                        <Filter className="w-3 h-3 text-[var(--text-tertiary)]" />
+                        <span>Filter</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const csvRows = [
+                            ['HOTELHUB GUEST FOLIO LEDGER'],
+                            ['Guest Name', selectedGuest?.name || 'Guest'],
+                            ['Generated Date', new Date().toLocaleDateString('en-US', { dateStyle: 'full' })],
+                            [''],
+                            ['Transaction Item', 'Reference Code', 'Posting Date', 'Category', 'Amount'],
+                            ['Breakfast', 'REF-1227673', '06 Sep 2026', 'Restaurant', '$270.00'],
+                            ['Cocktails', 'REF-1227589', '05 Sep 2026', 'Bar', '$120.00'],
+                            ['Sauna & Spa', 'REF-1226793', '05 Sep 2026', 'Spa', '$70.00'],
+                            ['Ironing & Laundry', 'REF-1226479', '04 Sep 2026', 'Laundry', '$56.00']
+                          ];
+                          const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((e) => e.join(',')).join('\n');
+                          const encodedUri = encodeURI(csvContent);
+                          const link = document.createElement('a');
+                          link.setAttribute('href', encodedUri);
+                          link.setAttribute('download', `Folio-Ledger-${(selectedGuest?.name || 'Guest').replace(/\s+/g, '-')}.csv`);
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        style={{ borderRadius: '10px' }}
+                        className="h-8 px-3 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-xs flex items-center gap-1 cursor-pointer transition-all active:scale-95"
+                      >
+                        <Download className="w-3 h-3" />
+                        <span>Export</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Clean Column Headers */}
+                  <div className="grid grid-cols-12 gap-2 text-[10px] font-extrabold text-[var(--text-tertiary)] uppercase tracking-wider px-3 py-2 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                    <div className="col-span-1 text-center">Select</div>
+                    <div className="col-span-4">Transaction Item</div>
+                    <div className="col-span-3 text-center">Posting Date</div>
+                    <div className="col-span-2 text-center">Category</div>
+                    <div className="col-span-2 text-right">Amount</div>
                   </div>
 
                   {/* Charges List */}
                   <div className="divide-y divide-black/[0.04] dark:divide-white/[0.06] text-xs">
                     {[
-                      { item: 'Breakfast', id: '№1227673', date: '06 Sep 2026', cat: 'Restaurant', catColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400', amount: '$270' },
-                      { item: 'Cocktails', id: '№1227589', date: '05 Sep 2026', cat: 'Bar', catColor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400', amount: '$120' },
-                      { item: 'Sauna & Spa', id: '№1226793', date: '05 Sep 2026', cat: 'Spa', catColor: 'bg-sky-500/10 text-sky-600 dark:text-sky-400', amount: '$70' },
-                      { item: 'Ironing & Laundry', id: '№1226479', date: '04 Sep 2026', cat: 'Laundry', catColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400', amount: '$56' },
+                      { item: 'Breakfast', id: 'REF-1227673', date: '06 Sep 2026', cat: 'Restaurant', catColor: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20', amount: '$270.00' },
+                      { item: 'Cocktails', id: 'REF-1227589', date: '05 Sep 2026', cat: 'Bar', catColor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20', amount: '$120.00' },
+                      { item: 'Sauna & Spa', id: 'REF-1226793', date: '05 Sep 2026', cat: 'Spa', catColor: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20', amount: '$70.00' },
+                      { item: 'Ironing & Laundry', id: 'REF-1226479', date: '04 Sep 2026', cat: 'Laundry', catColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20', amount: '$56.00' },
                     ].map((charge, idx) => (
-                      <div key={idx} className="py-3 flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          <input type="checkbox" defaultChecked className="w-4 h-4 accent-[#FF385C] rounded" />
-                          <div>
-                            <div className="font-bold text-[var(--text-primary)]">{charge.item}</div>
-                            <div className="text-[10px] text-[var(--text-tertiary)]">{charge.id}</div>
-                          </div>
+                      <div 
+                        key={idx} 
+                        className="py-3 px-3 grid grid-cols-12 gap-2 items-center hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors rounded-xl modal-item-hover cursor-pointer"
+                      >
+                        <div className="col-span-1 flex justify-center">
+                          <input 
+                            type="checkbox" 
+                            defaultChecked 
+                            className="w-4 h-4 accent-[#FF385C] rounded-md cursor-pointer transition-transform hover:scale-110" 
+                          />
                         </div>
-                        <div className="text-[var(--text-tertiary)]">{charge.date}</div>
-                        <span 
-                          style={{ borderRadius: '6px' }}
-                          className={`px-2.5 py-1 text-[10px] font-bold ${charge.catColor}`}
-                        >
-                          {charge.cat}
-                        </span>
-                        <div className="font-extrabold text-[var(--text-display)] text-sm">{charge.amount}</div>
+                        <div className="col-span-4 min-w-0">
+                          <div className="font-bold text-[var(--text-primary)] text-xs truncate">{charge.item}</div>
+                          <div className="text-[10px] font-mono text-[var(--text-tertiary)] truncate">{charge.id}</div>
+                        </div>
+                        <div className="col-span-3 text-center text-xs font-medium text-[var(--text-tertiary)]">
+                          {charge.date}
+                        </div>
+                        <div className="col-span-2 flex justify-center">
+                          <span 
+                            style={{ borderRadius: '8px' }}
+                            className={`px-2.5 py-0.5 text-[10px] font-extrabold ${charge.catColor}`}
+                          >
+                            {charge.cat}
+                          </span>
+                        </div>
+                        <div className="col-span-2 text-right font-extrabold text-[var(--text-display)] text-xs font-mono">
+                          {charge.amount}
+                        </div>
                       </div>
                     ))}
+                  </div>
+
+                  {/* Folio Total Summary Footer */}
+                  <div className="pt-3 border-t border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-tertiary)] font-medium">
+                      Total Charges (4 items): <span className="font-extrabold text-[var(--text-display)]">$516.00</span>
+                    </span>
+                    <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-extrabold text-[10px]">
+                      ✓ Folio Settled & Verified
+                    </span>
                   </div>
                 </div>
 
