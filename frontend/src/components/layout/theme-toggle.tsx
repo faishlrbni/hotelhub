@@ -29,7 +29,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       onClick={toggleTheme}
       type="button"
       style={{ borderRadius: '50%' }}
-      className={`w-9 h-9 flex items-center justify-center border border-black/[0.06] dark:border-white/[0.08] transition-all shadow-xs cursor-pointer ${
+      className={`w-9 h-9 flex items-center justify-center border border-black/[0.06] dark:border-white/[0.08] transition-all duration-300 hover:scale-110 active:scale-90 shadow-xs cursor-pointer group ${
         theme === 'dark'
           ? 'bg-[#1D212A] text-amber-400 hover:bg-[#262B36]'
           : 'bg-white text-amber-500 border-gray-200 hover:bg-gray-50'
@@ -38,9 +38,9 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       aria-label="Toggle Light / Dark Mode"
     >
       {theme === 'dark' ? (
-        <Moon className="w-4 h-4 text-amber-400" />
+        <Moon className="w-4 h-4 text-amber-400 transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110" />
       ) : (
-        <Sun className="w-4 h-4 text-amber-500" />
+        <Sun className="w-4 h-4 text-amber-500 transition-transform duration-300 group-hover:rotate-90 group-hover:scale-110" />
       )}
     </button>
   );

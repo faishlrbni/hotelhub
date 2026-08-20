@@ -58,3 +58,84 @@
     font-family: var(--font-display);
   }
 }
+
+/* ==========================================================================
+   MICRO-INTERACTIONS & BUTTON ANIMATION SYSTEM
+   ========================================================================== */
+
+/* Universal Button Base Transitions */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+[role="button"] {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease,
+              opacity 0.2s ease;
+  user-select: none;
+  will-change: transform, box-shadow;
+}
+
+/* Tactile Active Press (Haptic Touch Feel) */
+button:active:not(:disabled),
+a:active:not(:disabled),
+[role="button"]:active:not(:disabled) {
+  transform: scale(0.96) translateY(1px) !important;
+}
+
+/* Hover Lift for Standard Action Buttons */
+button:hover:not(:disabled),
+a.btn:hover,
+[role="button"]:hover:not(:disabled) {
+  transform: translateY(-1.5px);
+}
+
+/* Icon Nudge Micro-interaction inside buttons */
+button:hover svg,
+a:hover svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:hover svg.lucide-chevron-right,
+a:hover svg.lucide-chevron-right,
+button:hover svg.lucide-arrow-right,
+a:hover svg.lucide-arrow-right {
+  transform: translateX(3px);
+}
+
+button:hover svg.lucide-download,
+a:hover svg.lucide-download {
+  transform: translateY(2px);
+}
+
+button:hover svg.lucide-sparkles,
+a:hover svg.lucide-sparkles {
+  transform: scale(1.15) rotate(10deg);
+}
+
+button:hover svg.lucide-plus,
+a:hover svg.lucide-plus {
+  transform: rotate(90deg);
+}
+
+/* Brand Primary Button Micro-glow */
+.bg-\[\#FF385C\]:hover {
+  box-shadow: 0 8px 24px -4px rgba(255, 56, 92, 0.45) !important;
+  transform: translateY(-1.5px) scale(1.01) !important;
+}
+.bg-\[\#FF385C\]:active {
+  box-shadow: 0 3px 10px -2px rgba(255, 56, 92, 0.3) !important;
+  transform: translateY(0.5px) scale(0.97) !important;
+}
+
+/* Smooth Focus Ring Animation */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.35);
+}

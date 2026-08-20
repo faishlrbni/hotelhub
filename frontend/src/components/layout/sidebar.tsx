@@ -97,8 +97,8 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 style={{ borderRadius: '10px' }}
-                className={`flex items-center font-medium text-xs transition-all group ${
-                  collapsed ? 'justify-center w-10 h-10 mx-auto p-0' : 'gap-3 px-3.5 py-2.5'
+                className={`flex items-center font-medium text-xs transition-all duration-200 group active:scale-[0.97] ${
+                  collapsed ? 'justify-center w-10 h-10 mx-auto p-0 hover:scale-105' : 'gap-3 px-3.5 py-2.5 hover:translate-x-1'
                 } ${
                   isActive
                     ? 'bg-[#8C0020] text-white dark:bg-[#3D0A14] dark:text-[#FF385C] font-semibold shadow-xs'
@@ -106,7 +106,7 @@ export function Sidebar() {
                 }`}
                 title={collapsed ? item.label : undefined}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white dark:text-[#FF385C]' : 'text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)]'}`} />
+                <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive ? 'text-white dark:text-[#FF385C]' : 'text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)]'}`} />
                 {!collapsed && (
                   <span className="truncate flex-1 flex items-center justify-between">
                     <span>{item.label}</span>
