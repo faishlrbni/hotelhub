@@ -77,8 +77,17 @@ export default function SettingsPropertyPage() {
   const [location, setLocation] = useState(activeProperty?.location || 'Seminyak, Bali');
   const [currency, setCurrency] = useState('IDR (Rp)');
 
+  const [toastMessage, setToastMessage] = useState('');
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
+      
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
       
       {/* 1. Page Hero Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -204,7 +213,10 @@ export default function SettingsPropertyPage() {
             headerAction={
               <button
                 type="button"
-                onClick={() => alert('Property profile saved successfully!')}
+                onClick={() => {
+                  setToastMessage('✓ Property profile saved successfully!');
+                  setTimeout(() => setToastMessage(''), 4500);
+                }}
                 style={{ borderRadius: '10px' }}
                 className="h-8 px-3.5 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
               >
@@ -280,7 +292,8 @@ export default function SettingsPropertyPage() {
                         rooms: Number(roomCount) || 120,
                         location,
                       });
-                      alert(`Property profile updated for ${hotelName}!`);
+                      setToastMessage(`✓ Property profile updated for ${hotelName}!`);
+                      setTimeout(() => setToastMessage(''), 4500);
                     }}
                     style={{ borderRadius: '10px' }}
                     className="h-9 px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
@@ -386,9 +399,11 @@ export default function SettingsPropertyPage() {
               <button
                 type="button"
                 onClick={() => {
-                  alert(`Invitation sent to ${inviteEmail || 'colleague@ariahotel.com'}!`);
+                  const emailSent = inviteEmail || 'colleague@ariahotel.com';
                   setShowInviteModal(false);
                   setInviteEmail('');
+                  setToastMessage(`✓ Invitation sent to ${emailSent}!`);
+                  setTimeout(() => setToastMessage(''), 4500);
                 }}
                 style={{ borderRadius: '10px' }}
                 className="px-4 py-2 bg-[#FF385C] text-white text-xs font-semibold shadow-xs hover:bg-[#E00B41] transition-all cursor-pointer"
@@ -451,8 +466,10 @@ export default function SettingsPropertyPage() {
               <button
                 type="button"
                 onClick={() => {
-                  alert(`${selectedConfig.title} updated!`);
+                  const cfgTitle = selectedConfig.title;
                   setSelectedConfig(null);
+                  setToastMessage(`✓ ${cfgTitle} updated successfully!`);
+                  setTimeout(() => setToastMessage(''), 4500);
                 }}
                 style={{ borderRadius: '10px' }}
                 className="px-4 py-2 bg-[#FF385C] text-white text-xs font-semibold shadow-xs hover:bg-[#E00B41] transition-all cursor-pointer"

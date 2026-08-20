@@ -90,9 +90,17 @@ export default function AnalyticsPage() {
   const [selectedReport, setSelectedReport] = useState<ReportItem | null>(null);
   const [activeTab, setActiveTab] = useState<'pinned' | 'builder' | 'anomalies'>('pinned');
   const [timeRange, setTimeRange] = useState<'30D' | '90D' | 'YTD'>('30D');
+  const [toastMessage, setToastMessage] = useState('');
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
+      
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
       
       {/* 1. Page Hero Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -430,8 +438,27 @@ export default function AnalyticsPage() {
               <button
                 type="button"
                 onClick={() => {
-                  alert(`Downloading ${selectedReport.title} PDF report...`);
+                  const reportTitle = selectedReport.title;
+                  const csvRows = [
+                    ['HOTELHUB ANALYTICS EXECUTIVE REPORT'],
+                    ['Report Name', reportTitle],
+                    ['Category', selectedReport.category],
+                    ['Generated Date', new Date().toLocaleDateString('en-US', { dateStyle: 'full' })],
+                    ['Description', `"${selectedReport.description}"`],
+                    ['Last Updated', selectedReport.lastUpdated]
+                  ];
+                  const csvContent = 'data:text/csv;charset=utf-8,' + csvRows.map((e) => e.join(',')).join('\n');
+                  const encodedUri = encodeURI(csvContent);
+                  const link = document.createElement('a');
+                  link.setAttribute('href', encodedUri);
+                  link.setAttribute('download', `HotelHub-${reportTitle.replace(/\s+/g, '-')}-Report.csv`);
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+
                   setSelectedReport(null);
+                  setToastMessage(`✓ ${reportTitle} exported successfully.`);
+                  setTimeout(() => setToastMessage(''), 4000);
                 }}
                 style={{ borderRadius: '10px' }}
                 className="px-4 py-2 bg-[#FF385C] text-white text-xs font-semibold shadow-xs hover:bg-[#E00B41] transition-all cursor-pointer"

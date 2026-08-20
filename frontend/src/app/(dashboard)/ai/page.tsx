@@ -81,6 +81,7 @@ export default function AiCenterPage() {
   const [promptText, setPromptText] = useState('');
   const [aiResponse, setAiResponse] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const handleTestPrompt = () => {
     if (!promptText.trim()) return;
@@ -94,7 +95,14 @@ export default function AiCenterPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
+      
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
       
       {/* 1. Page Hero Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -393,8 +401,10 @@ export default function AiCenterPage() {
               <button
                 type="button"
                 onClick={() => {
-                  alert(`${selectedCopilot.name} configuration saved!`);
+                  const name = selectedCopilot.name;
                   setSelectedCopilot(null);
+                  setToastMessage(`✓ ${name} configuration saved successfully.`);
+                  setTimeout(() => setToastMessage(''), 4500);
                 }}
                 style={{ borderRadius: '10px' }}
                 className="px-4 py-2 bg-[#FF385C] text-white text-xs font-semibold shadow-xs hover:bg-[#E00B41] transition-all cursor-pointer"

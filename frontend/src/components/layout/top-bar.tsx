@@ -50,15 +50,18 @@ export function TopBar() {
     r.room.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const [toastMessage, setToastMessage] = useState('');
+
   const handleCreateQuickRes = (e: React.FormEvent) => {
     e.preventDefault();
     if (!guestName.trim()) return;
 
+    const createdName = guestName;
     addReservation({
-      guestName,
-      avatar: guestName.substring(0, 2).toUpperCase(),
+      guestName: createdName,
+      avatar: createdName.substring(0, 2).toUpperCase(),
       vip: false,
-      email: `${guestName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`,
+      email: `${createdName.toLowerCase().replace(/\s+/g, '.')}@gmail.com`,
       phone,
       room: `Room ${Math.floor(100 + Math.random() * 400)}`,
       category,
@@ -73,11 +76,20 @@ export function TopBar() {
 
     setShowQuickResModal(false);
     setGuestName('');
-    alert(`Reservation created for ${guestName}!`);
+    setToastMessage(`✓ Reservation created successfully for ${createdName}!`);
+    setTimeout(() => setToastMessage(''), 4500);
   };
 
   return (
-    <header className="h-16 border-b border-black/[0.06] dark:border-white/[0.08] bg-[var(--bg-card)] px-6 flex items-center justify-between sticky top-0 z-20 transition-colors">
+    <header className="h-16 border-b border-black/[0.06] dark:border-white/[0.08] bg-[var(--bg-card)] px-6 flex items-center justify-between sticky top-0 z-20 transition-colors relative">
+      
+      {/* Toast Notification Banner */}
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in slide-in-from-top-3 duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
       
       {/* Left: Search Bar with Live Popover Results */}
       <div className="relative w-72 sm:w-96">

@@ -245,7 +245,10 @@ export default function RevenuePage() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => alert('Deluxe room rate increased by +12%!')}
+                    onClick={() => {
+                      setToastMessage('✓ Deluxe Room dynamic rate increased by +12%!');
+                      setTimeout(() => setToastMessage(''), 4500);
+                    }}
                     style={{ borderRadius: '10px' }}
                     className="h-9 px-4 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
                   >
@@ -283,7 +286,10 @@ export default function RevenuePage() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => alert('Flash promotion created!')}
+                    onClick={() => {
+                      setToastMessage('✓ Flash Promotion campaign created & published.');
+                      setTimeout(() => setToastMessage(''), 4500);
+                    }}
                     style={{ borderRadius: '10px' }}
                     className="h-9 px-4 bg-[#387FF7] hover:bg-[#2F6ED6] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
                   >
@@ -321,7 +327,10 @@ export default function RevenuePage() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => alert('Suite base rate adjusted!')}
+                    onClick={() => {
+                      setToastMessage('✓ Suite base rate updated to Rp 2,850,000 for holiday weekend.');
+                      setTimeout(() => setToastMessage(''), 4500);
+                    }}
                     style={{ borderRadius: '10px' }}
                     className="h-9 px-4 bg-[#19B26B] hover:bg-[#15965A] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
                   >
@@ -497,7 +506,10 @@ export default function RevenuePage() {
                         <td className="py-3.5 px-4 text-right">
                           <button
                             type="button"
-                            onClick={() => alert(`Rate edit modal opened for ${plan.category}`)}
+                            onClick={() => {
+                              setToastMessage(`✓ Rate settings updated for ${plan.category}`);
+                              setTimeout(() => setToastMessage(''), 4500);
+                            }}
                             style={{ borderRadius: '10px' }}
                             className="h-8 px-3 bg-[var(--bg-left-panel)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-[#FF385C] hover:text-white transition-all cursor-pointer"
                           >
