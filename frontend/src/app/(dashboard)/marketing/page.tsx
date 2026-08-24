@@ -204,6 +204,20 @@ export default function MarketingPage() {
   const [showNewModal, setShowNewModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newType, setNewType] = useState('Google Search Ads');
+  const [toastMessage, setToastMessage] = useState('');
+
+  const handleExportReport = () => {
+    const csvContent = "data:text/csv;charset=utf-8,Campaign Name,Code,Channel,Budget,Revenue,ROI\nSummer Escape 2026,SUMMER26,Direct Web,Rp 25M,Rp 88.5M,354%\nVIP Suite Upgrade,VIP50,Email Blast,Rp 10M,Rp 42.0M,420%\nWeekend Getaway,WEEKEND20,Instagram Ads,Rp 15M,Rp 54.0M,360%";
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "hotelhub_marketing_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setToastMessage("Marketing ROI Report (CSV) exported & downloaded!");
+    setTimeout(() => setToastMessage(''), 3000);
+  };
 
   const filteredCampaigns = campaigns.filter((cmp: any) => {
     const matchesSearch = 
@@ -214,9 +228,16 @@ export default function MarketingPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
       
-      {/* 1. Header Bar */}
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* 1. Page Title & Action Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wider block mb-1">
@@ -233,6 +254,7 @@ export default function MarketingPage() {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
+            onClick={handleExportReport}
             className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <BarChart3 className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />

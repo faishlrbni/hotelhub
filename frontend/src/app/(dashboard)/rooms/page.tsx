@@ -82,6 +82,34 @@ export default function RoomsPage() {
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
+  const [showAdjustAvailModal, setShowAdjustAvailModal] = useState(false);
+  const [showNewResModal, setShowNewResModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // Form states
+  const [adjRoomCat, setAdjRoomCat] = useState('Deluxe Ocean View');
+  const [adjStatus, setAdjStatus] = useState('Ready');
+  const [adjRate, setAdjRate] = useState('180');
+
+  const [resGuestName, setResGuestName] = useState('');
+  const [resRoomNumber, setResRoomNumber] = useState('101');
+  const [resNights, setResNights] = useState('2');
+
+  const handleAdjustSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowAdjustAvailModal(false);
+    setToastMessage(`Updated availability & rates for ${adjRoomCat}!`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const handleResSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resGuestName.trim()) return;
+    setShowNewResModal(false);
+    setResGuestName('');
+    setToastMessage(`New reservation for "${resGuestName}" (Room #${resRoomNumber}) confirmed!`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
 
   const filteredRooms = rooms.filter((room: any) => {
     const matchesSearch =
@@ -95,8 +123,15 @@ export default function RoomsPage() {
   });
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
           
+          {toastMessage && (
+            <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+              <CheckCircle2 className="w-4 h-4 text-white" />
+              <span>{toastMessage}</span>
+            </div>
+          )}
+
           {/* Header Block (from Screenshot 1) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -104,7 +139,7 @@ export default function RoomsPage() {
                 Inventory & Room Operations
               </span>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)] tracking-tight">
-                Rooms
+                Rooms & Availability
               </h1>
               <p className="text-xs text-[var(--text-tertiary)] mt-1 font-medium">
                 Live status for every room, from occupancy to maintenance queue.
@@ -115,6 +150,7 @@ export default function RoomsPage() {
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
               <button
                 type="button"
+                onClick={() => setShowAdjustAvailModal(true)}
                 className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
@@ -122,6 +158,7 @@ export default function RoomsPage() {
               </button>
               <button
                 type="button"
+                onClick={() => setShowNewResModal(true)}
                 className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -487,6 +524,189 @@ export default function RoomsPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Adjust Availability Modal */}
+      {showAdjustAvailModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleAdjustSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowAdjustAvailModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <SlidersHorizontal className="w-4.5 h-4.5 text-[#FF385C]" />
+              Adjust Room Availability & Rates
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Room Category
+                </label>
+                <select
+                  value={adjRoomCat}
+                  onChange={(e) => setAdjRoomCat(e.target.value)}
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                >
+                  <option value="Deluxe Ocean View">Deluxe Ocean View</option>
+                  <option value="Superior King Room">Superior King Room</option>
+                  <option value="Beachfront Villa">Beachfront Villa</option>
+                  <option value="Standard Twin">Standard Twin</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Set Room Status
+                  </label>
+                  <select
+                    value={adjStatus}
+                    onChange={(e) => setAdjStatus(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Ready">Ready / Available</option>
+                    <option value="Maintenance">Maintenance Block</option>
+                    <option value="Out of Order">Out of Order</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Override Nightly Rate ($)
+                  </label>
+                  <input
+                    type="number"
+                    value={adjRate}
+                    onChange={(e) => setAdjRate(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowAdjustAvailModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Save Rate & Status
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* New Reservation Modal */}
+      {showNewResModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleResSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowNewResModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <Plus className="w-4.5 h-4.5 text-[#FF385C]" />
+              New Room Booking
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Guest Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={resGuestName}
+                  onChange={(e) => setResGuestName(e.target.value)}
+                  placeholder="e.g. Robert Downey Jr."
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Room Number
+                  </label>
+                  <select
+                    value={resRoomNumber}
+                    onChange={(e) => setResRoomNumber(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="101">Room #101 (Deluxe)</option>
+                    <option value="102">Room #102 (Ocean Suite)</option>
+                    <option value="204">Room #204 (Superior King)</option>
+                    <option value="301">Villa #301 (Garden Villa)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Stay Duration
+                  </label>
+                  <select
+                    value={resNights}
+                    onChange={(e) => setResNights(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="1">1 Night</option>
+                    <option value="2">2 Nights</option>
+                    <option value="3">3 Nights</option>
+                    <option value="5">5 Nights</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowNewResModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Confirm Reservation
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

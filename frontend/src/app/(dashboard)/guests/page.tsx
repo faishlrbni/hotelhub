@@ -153,6 +153,51 @@ export default function GuestsPage() {
   ]);
   const [newNote, setNewNote] = useState('');
 
+  // Modals & Filters state
+  const [showAddGuestModal, setShowAddGuestModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [tierFilter, setTierFilter] = useState<string>('All');
+  
+  // New Guest Form state
+  const [newGuestName, setNewGuestName] = useState('');
+  const [newGuestEmail, setNewGuestEmail] = useState('');
+  const [newGuestPhone, setNewGuestPhone] = useState('');
+  const [newGuestTier, setNewGuestTier] = useState('Silver Member');
+  const [newGuestCountry, setNewGuestCountry] = useState('Indonesia');
+
+  const handleCreateGuest = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newGuestName.trim()) return;
+    const newGuest: GuestCardData = {
+      id: Math.floor(1000000000 + Math.random() * 9000000000).toString(),
+      name: newGuestName.trim(),
+      avatar: newGuestName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'GS',
+      tier: newGuestTier,
+      vip: newGuestTier.includes('VIP') || newGuestTier.includes('Platinum'),
+      email: newGuestEmail.trim() || 'guest@example.com',
+      phone: newGuestPhone.trim() || '+62 812-3456-7890',
+      stays: 1,
+      spend: '$180.00',
+      pref: 'King bed, Quiet room',
+      dob: 'Jan 15, 1992',
+      nationality: newGuestCountry,
+      car: 'B 1234 XYZ',
+      resId: 'RES-' + Math.floor(1000 + Math.random() * 9000),
+      room: 'Deluxe Suite #302',
+      checkIn: 'Today',
+      checkOut: 'Tomorrow',
+      price: '$180.00',
+    };
+    GUESTS_DATA.unshift(newGuest);
+    setSelectedGuest(newGuest);
+    setShowAddGuestModal(false);
+    setNewGuestName('');
+    setNewGuestEmail('');
+    setNewGuestPhone('');
+    setToastMessage(`Guest profile for "${newGuest.name}" created successfully!`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newNote.trim()) return;
@@ -206,6 +251,7 @@ export default function GuestsPage() {
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
               <button
                 type="button"
+                onClick={() => setShowFilterModal(true)}
                 className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <Filter className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
@@ -213,6 +259,7 @@ export default function GuestsPage() {
               </button>
               <button
                 type="button"
+                onClick={() => setShowAddGuestModal(true)}
                 className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -949,6 +996,184 @@ export default function GuestsPage() {
 
             </div>
           )}
+
+      {/* Add Guest Profile Modal */}
+      {showAddGuestModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleCreateGuest}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto"
+          >
+            <button
+              type="button"
+              onClick={() => setShowAddGuestModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)]">
+              Add New Guest Profile
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newGuestName}
+                  onChange={(e) => setNewGuestName(e.target.value)}
+                  placeholder="e.g. Jessica Alba"
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={newGuestEmail}
+                    onChange={(e) => setNewGuestEmail(e.target.value)}
+                    placeholder="jessica@example.com"
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    value={newGuestPhone}
+                    onChange={(e) => setNewGuestPhone(e.target.value)}
+                    placeholder="+62 812-9988-7766"
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Loyalty Tier
+                  </label>
+                  <select
+                    value={newGuestTier}
+                    onChange={(e) => setNewGuestTier(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                  >
+                    <option value="Silver Member">Silver Member</option>
+                    <option value="Gold Member">Gold Member</option>
+                    <option value="Platinum VIP">Platinum VIP</option>
+                    <option value="Black Card VIP">Black Card VIP</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Country
+                  </label>
+                  <input
+                    type="text"
+                    value={newGuestCountry}
+                    onChange={(e) => setNewGuestCountry(e.target.value)}
+                    placeholder="Indonesia, Australia..."
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowAddGuestModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Save Guest Profile
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Filter Guests Modal */}
+      {showFilterModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <div
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-sm bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowFilterModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <Filter className="w-4 h-4 text-[#FF385C]" />
+              Filter Guest Directory
+            </h3>
+
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-[var(--text-primary)] mb-2">
+                Loyalty & Membership Tier
+              </label>
+              {['All', 'VIP', 'Platinum', 'Gold', 'Silver'].map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => {
+                    setTierFilter(t);
+                    setShowFilterModal(false);
+                    setToastMessage(`Filtered directory by tier: ${t}`);
+                    setTimeout(() => setToastMessage(''), 2500);
+                  }}
+                  className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-all cursor-pointer ${
+                    tierFilter === t
+                      ? 'bg-[#FF385C] text-white shadow-xs'
+                      : 'bg-[var(--bg-left-panel)] border border-black/[0.04] dark:border-white/[0.06] text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <span>{t === 'All' ? 'All Membership Tiers' : `${t} Members`}</span>
+                  {tierFilter === t && <CheckCircle2 className="w-4 h-4 text-white" />}
+                </button>
+              ))}
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowFilterModal(false)}
+                className="btn-secondary w-full"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

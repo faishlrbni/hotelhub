@@ -62,6 +62,50 @@ export default function HousekeepingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState<any | null>(null);
 
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showNewTaskModal, setShowNewTaskModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // Form states
+  const [assignRoomId, setAssignRoomId] = useState('HK-101');
+  const [assignStaffName, setAssignStaffName] = useState('Dewi K.');
+
+  const [newTaskRoom, setNewTaskRoom] = useState('');
+  const [newTaskCat, setNewTaskCat] = useState('Deluxe King View');
+  const [newTaskPriority, setNewTaskPriority] = useState('Normal');
+  const [newTaskStaff, setNewTaskStaff] = useState('Dewi K.');
+
+  const handleAssignSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (assignHousekeeper) {
+      assignHousekeeper(assignRoomId, assignStaffName);
+    }
+    setShowAssignModal(false);
+    setToastMessage(`Assigned ${assignStaffName} to task ${assignRoomId}!`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const handleNewTaskSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTaskRoom.trim()) return;
+    const newTask = {
+      id: `HK-${Math.floor(100 + Math.random() * 900)}`,
+      room: newTaskRoom.trim(),
+      category: newTaskCat,
+      vip: newTaskPriority === 'Urgent VIP',
+      priority: newTaskPriority === 'Urgent VIP' ? 'High' : newTaskPriority,
+      status: 'Pending',
+      assignedTo: newTaskStaff,
+      etaNote: 'Turnover requested',
+      arrivalInfo: 'Arrival pending'
+    };
+    housekeeping.unshift(newTask);
+    setShowNewTaskModal(false);
+    setNewTaskRoom('');
+    setToastMessage(`Created new housekeeping task for ${newTask.room}!`);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
   const filteredTasks = housekeeping.filter((task: any) =>
     task.room.toLowerCase().includes(searchQuery.toLowerCase()) ||
     task.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -73,8 +117,15 @@ export default function HousekeepingPage() {
   const inspectedTasks = filteredTasks.filter((t: any) => t.status === 'Inspected');
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
           
+      {toastMessage && (
+        <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
+          <CheckCircle2 className="w-4 h-4 text-white" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
           {/* Header Block (from Screenshot 1) */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -93,6 +144,7 @@ export default function HousekeepingPage() {
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
               <button
                 type="button"
+                onClick={() => setShowAssignModal(true)}
                 className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <UserCheck className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
@@ -100,6 +152,7 @@ export default function HousekeepingPage() {
               </button>
               <button
                 type="button"
+                onClick={() => setShowNewTaskModal(true)}
                 className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -505,6 +558,194 @@ export default function HousekeepingPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Assign Staff Modal */}
+      {showAssignModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleAssignSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowAssignModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <UserCheck className="w-4.5 h-4.5 text-[#FF385C]" />
+              Assign Housekeeping Staff
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Select Housekeeping Task / Room
+                </label>
+                <select
+                  value={assignRoomId}
+                  onChange={(e) => setAssignRoomId(e.target.value)}
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                >
+                  {housekeeping.map((t: any) => (
+                    <option key={t.id} value={t.id}>
+                      {t.room} — {t.category} ({t.status})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Assign Housekeeper / Staff
+                </label>
+                <select
+                  value={assignStaffName}
+                  onChange={(e) => setAssignStaffName(e.target.value)}
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                >
+                  <option value="Dewi K.">Dewi K. (Shift 1)</option>
+                  <option value="Maria S.">Maria S. (Shift 1)</option>
+                  <option value="Agus R.">Agus R. (Floor Supervisor)</option>
+                  <option value="Budi S.">Budi S. (Turnover Team)</option>
+                  <option value="Wayan T.">Wayan T. (Villa Team)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowAssignModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Confirm Assignment
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* New Task Modal */}
+      {showNewTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleNewTaskSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowNewTaskModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <Plus className="w-4.5 h-4.5 text-[#FF385C]" />
+              Create Housekeeping Task
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Room Name / Number *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newTaskRoom}
+                  onChange={(e) => setNewTaskRoom(e.target.value)}
+                  placeholder="e.g. Deluxe Room 304, Villa 12"
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Room Category
+                  </label>
+                  <select
+                    value={newTaskCat}
+                    onChange={(e) => setNewTaskCat(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Deluxe King View">Deluxe King View</option>
+                    <option value="Executive Ocean Suite">Executive Ocean Suite</option>
+                    <option value="Garden Villa">Garden Villa</option>
+                    <option value="Presidential Suite">Presidential Suite</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Priority Level
+                  </label>
+                  <select
+                    value={newTaskPriority}
+                    onChange={(e) => setNewTaskPriority(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Normal">Normal</option>
+                    <option value="High">High</option>
+                    <option value="Urgent VIP">Urgent VIP</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Assign Housekeeper
+                </label>
+                <select
+                  value={newTaskStaff}
+                  onChange={(e) => setNewTaskStaff(e.target.value)}
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                >
+                  <option value="Dewi K.">Dewi K.</option>
+                  <option value="Maria S.">Maria S.</option>
+                  <option value="Agus R.">Agus R.</option>
+                  <option value="Unassigned">Unassigned</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowNewTaskModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Create Task
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

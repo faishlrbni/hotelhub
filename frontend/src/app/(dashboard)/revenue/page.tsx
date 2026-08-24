@@ -18,6 +18,7 @@ import {
   Tag,
   Calendar,
   Percent,
+  X,
 } from 'lucide-react';
 import { KpiCard } from '@/components/ui/kpi-card';
 import { SectionCard } from '@/components/ui/section-card';
@@ -79,8 +80,22 @@ export default function RevenuePage() {
     }, 400);
   };
 
+  const [showCreatePromoModal, setShowCreatePromoModal] = useState(false);
+  const [promoName, setPromoName] = useState('');
+  const [promoDiscount, setPromoDiscount] = useState('15');
+  const [promoChannel, setPromoChannel] = useState('Direct Web Booking');
+
+  const handleCreatePromoSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!promoName.trim()) return;
+    setShowCreatePromoModal(false);
+    setPromoName('');
+    setToastMessage(`Promotion "${promoName}" (${promoDiscount}% OFF) created & activated!`);
+    setTimeout(() => setToastMessage(''), 3500);
+  };
+
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
           
       {toastMessage && (
         <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2.5 animate-in fade-in duration-300">
@@ -117,6 +132,7 @@ export default function RevenuePage() {
 
           <button
             type="button"
+            onClick={() => setShowCreatePromoModal(true)}
             className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -521,6 +537,96 @@ export default function RevenuePage() {
               </div>
             </SectionCard>
           )}
+
+      {/* Create Promotion Modal */}
+      {showCreatePromoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleCreatePromoSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowCreatePromoModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <Plus className="w-4.5 h-4.5 text-[#FF385C]" />
+              Create Yield Promotion
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Promotion Campaign Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={promoName}
+                  onChange={(e) => setPromoName(e.target.value)}
+                  placeholder="e.g. Flash Midweek Special"
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Discount Percentage (%)
+                  </label>
+                  <input
+                    type="number"
+                    value={promoDiscount}
+                    onChange={(e) => setPromoDiscount(e.target.value)}
+                    placeholder="15"
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Target Booking Channel
+                  </label>
+                  <select
+                    value={promoChannel}
+                    onChange={(e) => setPromoChannel(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Direct Web Booking">Direct Web Booking</option>
+                    <option value="Booking.com OTA">Booking.com OTA</option>
+                    <option value="Email Newsletter VIP">Email Newsletter VIP</option>
+                    <option value="Agoda Member Perk">Agoda Member Perk</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowCreatePromoModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Activate Promotion
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
     </div>
   );
