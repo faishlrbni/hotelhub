@@ -97,7 +97,7 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
       )}
       
       {/* Left Section: Mobile Hamburger Toggle + Search Bar */}
-      <div className="flex items-center gap-2 flex-1 max-w-[200px] xs:max-w-xs sm:max-w-md">
+      <div className="flex items-center gap-2 flex-1 min-w-0 max-w-none sm:max-w-md">
         
         {/* Mobile Navigation Hamburger Menu Toggle Button */}
         <button
@@ -111,7 +111,7 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
         </button>
 
         {/* Search Bar Input */}
-        <div className="relative flex-1">
+        <div className="relative flex-1 min-w-0">
           <input
             type="text"
             value={searchQuery}
@@ -190,17 +190,6 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
 
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        
-        {/* Mobile Compact + New Reservation Button */}
-        <button
-          type="button"
-          onClick={() => setShowQuickResModal(true)}
-          style={{ borderRadius: '10px' }}
-          className="flex sm:hidden w-9 h-9 items-center justify-center bg-[#FF385C] text-white shadow-[0_4px_12px_rgba(255,56,92,0.35)] active:scale-95 cursor-pointer shrink-0"
-          title="New reservation"
-        >
-          <Plus className="w-4 h-4" />
-        </button>
 
         {/* Desktop New Reservation Action Button */}
         <button
@@ -212,8 +201,10 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
           <span>New reservation</span>
         </button>
 
-        {/* Theme Toggle */}
-        <ThemeToggle />
+        {/* Theme Toggle (Desktop Header) */}
+        <div className="hidden sm:flex items-center">
+          <ThemeToggle />
+        </div>
 
         {/* Notification Bell */}
         <div className="relative">
@@ -238,25 +229,19 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
           {showNotifDrawer && (
             <div 
               style={{ borderRadius: '16px' }}
-              className="absolute top-12 right-0 w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
+              className="absolute top-12 right-0 w-80 max-w-[calc(100vw-2rem)] bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
             >
-              <div className="flex items-center justify-between border-b border-black/[0.04] dark:border-white/[0.06] pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-xs text-[var(--text-display)]">
-                    Notifications
-                  </span>
-                  {unreadCount > 0 && (
-                    <span className="px-2 py-0.5 text-[9px] font-extrabold bg-[#FF385C]/15 text-[#FF385C] rounded-full">
-                      {unreadCount} new
-                    </span>
-                  )}
+              <div className="flex items-center justify-between border-b border-black/[0.04] dark:border-white/[0.06] pb-2.5">
+                <div className="font-bold text-xs text-[var(--text-primary)] flex items-center gap-2">
+                  <Bell className="w-4 h-4 text-[#FF385C]" />
+                  <span>Notifications</span>
                 </div>
                 <button
                   type="button"
-                  onClick={markAllNotificationsRead}
-                  className="text-[10px] font-semibold text-[#387FF7] hover:underline cursor-pointer"
+                  onClick={() => setShowNotifDrawer(false)}
+                  className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
                 >
-                  Mark all as read
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
 
@@ -264,21 +249,14 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
                 {notifications.map((n: any) => (
                   <div
                     key={n.id}
-                    onClick={() => markNotificationRead(n.id)}
-                    style={{ borderRadius: '12px' }}
-                    className={`p-3 border text-xs space-y-1 cursor-pointer transition-all ${
-                      n.read
-                        ? 'bg-[var(--bg-left-panel)] border-black/[0.04] dark:border-white/[0.06] opacity-75'
-                        : 'bg-pink-500/5 border-[#FF385C]/30'
-                    }`}
+                    style={{ borderRadius: '10px' }}
+                    className="p-2.5 bg-[var(--bg-left-panel)] border border-black/[0.04] dark:border-white/[0.06] space-y-1 hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[var(--text-primary)]">{n.title}</span>
-                      <span className="text-[10px] text-[var(--text-tertiary)]">{n.time}</span>
+                      <span className="font-bold text-xs text-[var(--text-primary)]">{n.title}</span>
+                      <span className="text-[9px] text-[var(--text-tertiary)]">{n.time}</span>
                     </div>
-                    <p className="text-[11px] text-[var(--text-tertiary)] leading-relaxed">
-                      {n.message}
-                    </p>
+                    <p className="text-[11px] text-[var(--text-tertiary)] leading-tight">{n.message}</p>
                   </div>
                 ))}
               </div>
@@ -286,7 +264,7 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
           )}
         </div>
 
-        {/* User Profile Avatar Dropdown */}
+        {/* User Profile Dropdown Avatar Button */}
         <div className="relative">
           <button
             type="button"
@@ -336,6 +314,13 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
                   <UserIcon className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
                   <span>Workspace Settings</span>
                 </button>
+
+                {/* Theme Toggle for Mobile inside User Menu */}
+                <div className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-[var(--text-primary)] sm:hidden border-t border-black/[0.04] dark:border-white/[0.06] pt-2 mt-2">
+                  <span className="text-[var(--text-tertiary)]">Theme</span>
+                  <ThemeToggle />
+                </div>
+
                 <button
                   type="button"
                   onClick={logout}
