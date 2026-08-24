@@ -23,11 +23,23 @@ import {
   Users,
   Lock,
   ArrowUpRight,
-  Check
+  Check,
+  Calculator,
+  Sliders,
+  DollarSign,
+  Globe,
+  Star,
+  RefreshCw,
+  SlidersHorizontal,
+  CheckCircle,
+  Award
 } from 'lucide-react';
 
 export default function LandingPage() {
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<'occupancy' | 'ai' | 'housekeeping'>('occupancy');
+  const [activeRoleTab, setActiveRoleTab] = useState<'frontdesk' | 'housekeeping' | 'revenue'>('frontdesk');
+  const [roomSliderCount, setRoomSliderCount] = useState<number>(60);
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -39,6 +51,11 @@ export default function LandingPage() {
       document.documentElement.classList.add('dark');
     }
   };
+
+  // Calculations for interactive ROI widget
+  const hoursSavedWeekly = Math.round(roomSliderCount * 0.28);
+  const monthlyYieldLift = Math.round(roomSliderCount * 245000);
+  const turnoverSpeedPercent = Math.min(45, Math.round(roomSliderCount * 0.4 + 15));
 
   const faqList = [
     {
@@ -52,7 +69,31 @@ export default function LandingPage() {
     {
       q: 'How long does setup take?',
       a: 'Create an account, add your property details, and invite your team — most properties are fully live and operational the same morning.'
+    },
+    {
+      q: 'Can I manage multiple hotel properties under one account?',
+      a: 'Yes! HotelHub provides multi-property workspace switching with global executive reporting and role-based permissions per location.'
     }
+  ];
+
+  const brandLogos = [
+    'The Hearth Collection',
+    'Aria Resort Seminyak',
+    'Amarterra Luxury Villas',
+    'Alila Ubud Retreat',
+    'Padma Resort Bali',
+    'Mandapa Reserve'
+  ];
+
+  const integrations = [
+    { name: 'Booking.com', type: 'OTA Direct Sync' },
+    { name: 'Expedia Group', type: 'Channel Manager' },
+    { name: 'Agoda', type: 'Real-time Rates' },
+    { name: 'Airbnb API', type: 'Instant Calendar' },
+    { name: 'Stripe Payments', type: 'Automated Billing' },
+    { name: 'WhatsApp Business', type: 'Guest Messaging' },
+    { name: 'Cloudbeds PMS', type: 'Sync Connector' },
+    { name: 'Oracle Opera', type: 'Enterprise Import' }
   ];
 
   return (
@@ -73,10 +114,12 @@ export default function LandingPage() {
           </Link>
 
           {/* Desktop Anchor Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-[var(--text-tertiary)]">
+          <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold text-[var(--text-tertiary)]">
             <a href="#workspace" className="hover:text-[var(--text-primary)] transition-colors">Workspace</a>
             <a href="#modules" className="hover:text-[var(--text-primary)] transition-colors">Modules</a>
-            <a href="#insights" className="hover:text-[var(--text-primary)] transition-colors">How it works</a>
+            <a href="#roles" className="hover:text-[var(--text-primary)] transition-colors">For Teams</a>
+            <a href="#calculator" className="hover:text-[var(--text-primary)] transition-colors">ROI Calculator</a>
+            <a href="#pricing" className="hover:text-[var(--text-primary)] transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-[var(--text-primary)] transition-colors">FAQ</a>
           </nav>
 
@@ -105,12 +148,12 @@ export default function LandingPage() {
       {/* 2. Hero Section */}
       <section className="relative pt-12 sm:pt-20 pb-16 sm:pb-24 overflow-hidden border-b border-black/[0.04] dark:border-white/[0.06]">
         {/* Subtle Background Glow Elements */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-[#FF385C]/15 via-[#387FF7]/10 to-transparent blur-3xl pointer-events-none rounded-full" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-tr from-[#FF385C]/15 via-[#387FF7]/10 to-transparent blur-3xl pointer-events-none rounded-full" />
 
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6 sm:space-y-8">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6 sm:space-y-8">
           
           {/* Protected Workspace Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-xs text-xs font-semibold text-[var(--text-tertiary)] animate-in fade-in slide-in-from-bottom-3 duration-500">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-xs text-xs font-semibold text-[var(--text-tertiary)] animate-in fade-in slide-in-from-bottom-3 duration-500">
             <span className="w-2 h-2 rounded-full bg-[#19B26B] animate-pulse" />
             <span>Protected workspace — sign in with your HotelHub account</span>
           </div>
@@ -152,8 +195,78 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* NEW: Interactive Live UI Preview Container (Glassmorphic Mockup Frame) */}
+          <div className="pt-6 max-w-5xl mx-auto">
+            <div className="p-2.5 rounded-3xl bg-gradient-to-tr from-[#FF385C]/30 via-black/10 to-[#387FF7]/30 backdrop-blur-xl shadow-2xl relative">
+              
+              {/* Floating Live AI Badge */}
+              <div className="absolute -top-4 right-6 sm:right-12 z-20 px-3.5 py-1.5 rounded-full bg-[#19B26B] text-white text-xs font-bold shadow-lg flex items-center gap-2 animate-bounce">
+                <Sparkles className="w-3.5 h-3.5 text-white" />
+                <span>AI Concierge Signal: Room #102 Inspected</span>
+              </div>
+
+              {/* Inner Dashboard Glass Preview */}
+              <div className="bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-2xl overflow-hidden shadow-inner text-left">
+                
+                {/* Mock Window Controls Header */}
+                <div className="px-4 py-3 bg-[var(--bg-left-panel)] border-b border-black/[0.06] dark:border-white/[0.08] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                    <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                    <span className="text-[11px] font-bold text-[var(--text-tertiary)] ml-2">hotelhub.app / workspace / aria-bali</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#19B26B]">
+                    <span className="w-2 h-2 rounded-full bg-[#19B26B] animate-pulse" />
+                    Live 120 Rooms
+                  </div>
+                </div>
+
+                {/* Dashboard Screen Mockup Body */}
+                <div className="p-4 sm:p-6 space-y-4">
+                  {/* Top Bar Stats */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                      <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">Occupancy</div>
+                      <div className="text-base sm:text-lg font-extrabold text-[var(--text-display)] mt-0.5">88.4%</div>
+                    </div>
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                      <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">ADR</div>
+                      <div className="text-base sm:text-lg font-extrabold text-[var(--text-display)] mt-0.5">Rp 1,420,000</div>
+                    </div>
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                      <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">RevPAR</div>
+                      <div className="text-base sm:text-lg font-extrabold text-[#19B26B] mt-0.5">Rp 1,255,280</div>
+                    </div>
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                      <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">Housekeeping</div>
+                      <div className="text-base sm:text-lg font-extrabold text-[#387FF7] mt-0.5">62 Ready</div>
+                    </div>
+                  </div>
+
+                  {/* Active Live Room Status Row */}
+                  <div className="p-3.5 bg-gradient-to-r from-[#FF385C]/10 via-[var(--bg-left-panel)] to-[var(--bg-left-panel)] rounded-xl border border-[#FF385C]/20 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-[#FF385C] text-white flex items-center justify-center font-bold">
+                        AW
+                      </div>
+                      <div>
+                        <div className="font-bold text-[var(--text-display)]">Alexander Wright (Platinum VIP)</div>
+                        <div className="text-[11px] text-[var(--text-tertiary)]">Ocean Suite 102 · Checked In 10m ago</div>
+                      </div>
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full bg-[#19B26B]/15 text-[#19B26B] font-bold text-[10px]">
+                      VIP Arrival Prepped
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
           {/* Quick Stats Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto pt-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto pt-6">
             <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs">
               <div className="text-xl sm:text-2xl font-extrabold text-[var(--text-display)]">1 screen</div>
               <div className="text-xs text-[var(--text-tertiary)] mt-0.5 font-medium">Front desk, housekeeping & revenue</div>
@@ -172,6 +285,23 @@ export default function LandingPage() {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* NEW: Hotel Brand Logos Marquee */}
+      <section className="py-8 bg-[var(--bg-left-panel)] border-b border-black/[0.04] dark:border-white/[0.06]">
+        <div className="max-w-[1400px] mx-auto px-4 text-center space-y-4">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-[var(--text-tertiary)]">
+            Trusted by 250+ Luxury Resorts & Boutique Hotels Worldwide
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-75 grayscale hover:grayscale-0 transition-all text-xs font-extrabold text-[var(--text-secondary)]">
+            {brandLogos.map((brand, i) => (
+              <span key={i} className="flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-[#FF385C]" />
+                <span>{brand}</span>
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -362,6 +492,122 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* NEW: Role-Based Team Experience Showcase (#roles) */}
+      <section id="roles" className="py-16 sm:py-24 border-b border-black/[0.04] dark:border-white/[0.06]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FF385C] bg-[#FF385C]/10 px-3 py-1 rounded-full">
+              For Every Role
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
+              Tailored views built specifically for your hotel staff.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div className="p-8 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-3xl space-y-4 shadow-sm hover:shadow-xl transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-[#FF385C] flex items-center justify-center font-bold">
+                <UserCheck className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-[var(--text-display)]">Front Desk Operations</h3>
+              <ul className="space-y-2 text-xs text-[var(--text-tertiary)] font-medium">
+                <li className="flex items-center gap-2">✓ 1-click guest check-in & check-out</li>
+                <li className="flex items-center gap-2">✓ VIP loyalty tags & preference highlights</li>
+                <li className="flex items-center gap-2">✓ Real-time housekeeping readiness indicators</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-3xl space-y-4 shadow-sm hover:shadow-xl transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-[#387FF7] flex items-center justify-center font-bold">
+                <BedDouble className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-[var(--text-display)]">Housekeeping & Floor Supervisors</h3>
+              <ul className="space-y-2 text-xs text-[var(--text-tertiary)] font-medium">
+                <li className="flex items-center gap-2">✓ Mobile-first cleaning status updates</li>
+                <li className="flex items-center gap-2">✓ Priority queue for VIP guest arrivals</li>
+                <li className="flex items-center gap-2">✓ Instant supervisor inspection sign-offs</li>
+              </ul>
+            </div>
+
+            <div className="p-8 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-3xl space-y-4 shadow-sm hover:shadow-xl transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-[#19B26B] flex items-center justify-center font-bold">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-[var(--text-display)]">Revenue & General Managers</h3>
+              <ul className="space-y-2 text-xs text-[var(--text-tertiary)] font-medium">
+                <li className="flex items-center gap-2">✓ Automated ADR & RevPAR yield suggestions</li>
+                <li className="flex items-center gap-2">✓ 1-click CSV report exports & pacing analytics</li>
+                <li className="flex items-center gap-2">✓ Channel distribution & promo code performance</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Interactive ROI & Time Savings Calculator Widget (#calculator) */}
+      <section id="calculator" className="py-16 sm:py-24 border-b border-black/[0.04] dark:border-white/[0.06] bg-[var(--bg-left-panel)]">
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#19B26B] bg-[#19B26B]/10 px-3 py-1 rounded-full flex items-center gap-1.5 w-fit mx-auto">
+              <Calculator className="w-3.5 h-3.5" />
+              <span>Interactive Calculator</span>
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
+              Calculate the time & revenue HotelHub unlocks for your property.
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--text-tertiary)] font-medium">
+              Adjust the slider below to match your property's room inventory size.
+            </p>
+          </div>
+
+          <div className="p-8 sm:p-12 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-3xl shadow-xl space-y-8 max-w-4xl mx-auto">
+            
+            {/* Room Count Slider */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-sm font-bold text-[var(--text-display)]">
+                <span>Property Size: <span className="text-[#FF385C] text-lg font-extrabold">{roomSliderCount} Rooms</span></span>
+                <span className="text-xs text-[var(--text-tertiary)]">20 — 200+ Rooms</span>
+              </div>
+              <input 
+                type="range"
+                min="20"
+                max="200"
+                step="5"
+                value={roomSliderCount}
+                onChange={(e) => setRoomSliderCount(Number(e.target.value))}
+                className="w-full accent-[#FF385C] h-2 bg-[var(--bg-left-panel)] rounded-lg cursor-pointer"
+              />
+            </div>
+
+            {/* Calculated Output Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="p-5 bg-[var(--bg-left-panel)] rounded-2xl border border-black/[0.04] dark:border-white/[0.06] text-center space-y-1">
+                <Clock className="w-5 h-5 text-[#FF385C] mx-auto mb-2" />
+                <div className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)]">{hoursSavedWeekly} hrs/wk</div>
+                <div className="text-xs text-[var(--text-tertiary)] font-medium">Saved on staff handovers</div>
+              </div>
+              <div className="p-5 bg-[var(--bg-left-panel)] rounded-2xl border border-black/[0.04] dark:border-white/[0.06] text-center space-y-1">
+                <TrendingUp className="w-5 h-5 text-[#19B26B] mx-auto mb-2" />
+                <div className="text-2xl sm:text-3xl font-extrabold text-[#19B26B]">
+                  +Rp {(monthlyYieldLift / 1000000).toFixed(1)}M
+                </div>
+                <div className="text-xs text-[var(--text-tertiary)] font-medium">Est. monthly RevPAR yield lift</div>
+              </div>
+              <div className="p-5 bg-[var(--bg-left-panel)] rounded-2xl border border-black/[0.04] dark:border-white/[0.06] text-center space-y-1">
+                <Zap className="w-5 h-5 text-[#387FF7] mx-auto mb-2" />
+                <div className="text-2xl sm:text-3xl font-extrabold text-[var(--text-display)]">+{turnoverSpeedPercent}%</div>
+                <div className="text-xs text-[var(--text-tertiary)] font-medium">Faster room turnover velocity</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* 4. Four Modules Section (#modules) */}
       <section id="modules" className="py-16 sm:py-24 border-b border-black/[0.04] dark:border-white/[0.06]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -446,6 +692,125 @@ export default function LandingPage() {
                 <span>View AI Center</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Integrations & Tech Ecosystem Grid */}
+      <section className="py-16 sm:py-24 border-b border-black/[0.04] dark:border-white/[0.06]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-tertiary)]">Ecosystem</span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
+              Connects seamlessly with your existing hotel tech.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {integrations.map((item, idx) => (
+              <div key={idx} className="p-4 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] rounded-2xl text-center shadow-xs">
+                <div className="text-sm font-bold text-[var(--text-display)]">{item.name}</div>
+                <div className="text-[11px] text-[var(--text-tertiary)] mt-0.5">{item.type}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Transparent Pricing Plans Section (#pricing) */}
+      <section id="pricing" className="py-16 sm:py-24 border-b border-black/[0.04] dark:border-white/[0.06] bg-[var(--bg-left-panel)]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          
+          <div className="text-center max-w-3xl mx-auto space-y-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FF385C] bg-[#FF385C]/10 px-3 py-1 rounded-full">
+              Transparent Pricing
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
+              Simple, property-based plans. No hidden PMS fees.
+            </h2>
+
+            {/* Monthly / Annual Toggle */}
+            <div className="inline-flex items-center gap-3 p-1.5 bg-[var(--bg-card)] rounded-2xl border border-black/[0.08] dark:border-white/[0.12] text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-4 py-2 rounded-xl transition-all cursor-pointer ${
+                  billingCycle === 'monthly' ? 'bg-[#FF385C] text-white shadow-md' : 'text-[var(--text-tertiary)]'
+                }`}
+              >
+                Monthly Billing
+              </button>
+              <button
+                type="button"
+                onClick={() => setBillingCycle('annual')}
+                className={`px-4 py-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
+                  billingCycle === 'annual' ? 'bg-[#FF385C] text-white shadow-md' : 'text-[var(--text-tertiary)]'
+                }`}
+              >
+                <span>Annual Billing</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-400 text-black text-[10px] font-black uppercase">Save 20%</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            
+            {/* Starter Plan */}
+            <div className="p-8 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-3xl space-y-6 shadow-sm flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Boutique</div>
+                <div className="text-3xl font-extrabold text-[var(--text-display)]">
+                  ${billingCycle === 'annual' ? '65' : '79'} <span className="text-xs text-[var(--text-tertiary)] font-normal">/ month</span>
+                </div>
+                <p className="text-xs text-[var(--text-tertiary)]">Ideal for independent boutique hotels up to 30 rooms.</p>
+                <hr className="border-black/[0.06] dark:border-white/[0.08]" />
+                <ul className="space-y-2.5 text-xs text-[var(--text-primary)] font-medium">
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Up to 30 rooms inventory</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Reservations & Housekeeping</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> 5 team seat licenses</li>
+                </ul>
+              </div>
+              <Link href="/signup" className="btn-secondary w-full justify-center">Get Started</Link>
+            </div>
+
+            {/* Growth Plan (Popular) */}
+            <div className="p-8 bg-[var(--bg-card)] border-2 border-[#FF385C] rounded-3xl space-y-6 shadow-xl relative flex flex-col justify-between">
+              <div className="absolute -top-3.5 right-6 px-3 py-1 bg-[#FF385C] text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-md">
+                Most Popular
+              </div>
+              <div className="space-y-4">
+                <div className="text-sm font-bold text-[#FF385C] uppercase tracking-wider">Growth Resort</div>
+                <div className="text-3xl font-extrabold text-[var(--text-display)]">
+                  ${billingCycle === 'annual' ? '159' : '199'} <span className="text-xs text-[var(--text-tertiary)] font-normal">/ month</span>
+                </div>
+                <p className="text-xs text-[var(--text-tertiary)]">For growing resorts and hotels (up to 100 rooms).</p>
+                <hr className="border-black/[0.06] dark:border-white/[0.08]" />
+                <ul className="space-y-2.5 text-xs text-[var(--text-primary)] font-medium">
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Up to 100 rooms inventory</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Full AI Signals & Yield Manager</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Unlimited team staff seats</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> 1-Click CSV & Revenue Export</li>
+                </ul>
+              </div>
+              <Link href="/signup" className="btn-primary w-full justify-center shadow-lg shadow-[#FF385C]/30">Start 14-Day Free Trial</Link>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="p-8 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-3xl space-y-6 shadow-sm flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="text-sm font-bold text-[var(--text-tertiary)] uppercase tracking-wider">Enterprise Group</div>
+                <div className="text-3xl font-extrabold text-[var(--text-display)]">Custom</div>
+                <p className="text-xs text-[var(--text-tertiary)]">Multi-property groups, hotel chains & custom integrations.</p>
+                <hr className="border-black/[0.06] dark:border-white/[0.08]" />
+                <ul className="space-y-2.5 text-xs text-[var(--text-primary)] font-medium">
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Unlimited properties & rooms</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Custom PMS & Webhook APIs</li>
+                  <li className="flex items-center gap-2"><Check className="w-4 h-4 text-[#19B26B]" /> Dedicated Account Concierge</li>
+                </ul>
+              </div>
+              <Link href="/signup" className="btn-secondary w-full justify-center">Contact Enterprise</Link>
             </div>
 
           </div>
