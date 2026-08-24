@@ -91,6 +91,42 @@ export default function AnalyticsPage() {
   const [activeTab, setActiveTab] = useState<'pinned' | 'builder' | 'anomalies'>('pinned');
   const [timeRange, setTimeRange] = useState<'30D' | '90D' | 'YTD'>('30D');
   const [toastMessage, setToastMessage] = useState('');
+  const [showBuildModal, setShowBuildModal] = useState(false);
+  const [dashTitle, setDashTitle] = useState('');
+  const [dashMetric, setDashMetric] = useState('Occupancy Rate & ADR');
+  const [dashFreq, setDashFreq] = useState('Real-time rolling');
+
+  const handleExportCSV = () => {
+    const csvContent = "data:text/csv;charset=utf-8,Report Name,Category,Schedule,Views,Status\nOccupancy & ADR Mix,Revenue,Daily 07:00,412,Active\nHousekeeping velocity,Operations,Real-time,318,Active\nGuest LTV distribution,CRM,Weekly Mon,280,Active\nShift handover log,Operations,Shift end digest,210,Active\nForecast accuracy,Performance,Real-time 90D,165,Active";
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "hotelhub_analytics_bi_report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setToastMessage("Analytics & BI Report (CSV) exported & downloaded!");
+    setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const handleBuildDashboardSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!dashTitle.trim()) return;
+    const newReport: ReportItem = {
+      id: `REP-${Math.floor(100 + Math.random() * 900)}`,
+      title: dashTitle.trim(),
+      description: `${dashMetric} · ${dashFreq}`,
+      category: 'Performance',
+      lastUpdated: 'Created just now',
+      schedule: dashFreq,
+      views: 1
+    };
+    PINNED_REPORTS.unshift(newReport);
+    setShowBuildModal(false);
+    setDashTitle('');
+    setToastMessage(`Custom dashboard "${newReport.title}" built & pinned successfully!`);
+    setTimeout(() => setToastMessage(''), 3500);
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
@@ -119,6 +155,7 @@ export default function AnalyticsPage() {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
+            onClick={handleExportCSV}
             className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Download className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
@@ -126,6 +163,7 @@ export default function AnalyticsPage() {
           </button>
           <button
             type="button"
+            onClick={() => setShowBuildModal(true)}
             className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -465,6 +503,98 @@ export default function AnalyticsPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Build Dashboard Modal */}
+      {showBuildModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleBuildDashboardSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowBuildModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <Plus className="w-4.5 h-4.5 text-[#FF385C]" />
+              Build Custom Analytics Dashboard
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Dashboard Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={dashTitle}
+                  onChange={(e) => setDashTitle(e.target.value)}
+                  placeholder="e.g. Q4 Executive Revenue & RevPAR"
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Primary Metric
+                  </label>
+                  <select
+                    value={dashMetric}
+                    onChange={(e) => setDashMetric(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Occupancy Rate & ADR">Occupancy Rate & ADR</option>
+                    <option value="RevPAR & Pacing">RevPAR & Pacing</option>
+                    <option value="Housekeeping Velocity">Housekeeping Velocity</option>
+                    <option value="Guest LTV & Loyalty">Guest LTV & Loyalty</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Refresh Schedule
+                  </label>
+                  <select
+                    value={dashFreq}
+                    onChange={(e) => setDashFreq(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Real-time rolling">Real-time rolling</option>
+                    <option value="Daily 07:00 Digest">Daily 07:00 Digest</option>
+                    <option value="Weekly Monday Audit">Weekly Monday Audit</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowBuildModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Build & Pin Dashboard
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

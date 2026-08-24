@@ -93,6 +93,27 @@ export default function AiCenterPage() {
       setIsGenerating(false);
     }, 450);
   };
+  const [showNewCopilotModal, setShowNewCopilotModal] = useState(false);
+  const [copilotName, setCopilotName] = useState('');
+  const [copilotRole, setCopilotRole] = useState('Guest Messaging & Review Auto-Reply');
+  const [copilotModel, setCopilotModel] = useState('Gemini 1.5 Pro');
+
+  const handleCreateCopilotSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!copilotName.trim()) return;
+    const newCopilotItem: any = {
+      id: `COP-${Math.floor(100 + Math.random() * 900)}`,
+      name: copilotName.trim(),
+      description: copilotRole,
+      acceptedStats: 'New agent initialized',
+      category: 'General',
+    };
+    COPILOTS_DATA.unshift(newCopilotItem);
+    setShowNewCopilotModal(false);
+    setCopilotName('');
+    setToastMessage(`AI Copilot Agent "${newCopilotItem.name}" created & deployed!`);
+    setTimeout(() => setToastMessage(''), 3500);
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto min-h-screen relative">
@@ -121,6 +142,7 @@ export default function AiCenterPage() {
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
+            onClick={() => setShowNewCopilotModal(true)}
             className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Plus className="w-3.5 h-3.5" />
@@ -412,6 +434,98 @@ export default function AiCenterPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Create New Copilot Modal */}
+      {showNewCopilotModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <form
+            onSubmit={handleCreateCopilotSubmit}
+            style={{ borderRadius: '24px' }}
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+          >
+            <button
+              type="button"
+              onClick={() => setShowNewCopilotModal(false)}
+              style={{ borderRadius: '50%' }}
+              className="w-8 h-8 flex items-center justify-center bg-[var(--bg-left-panel)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors absolute top-6 right-6 cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <h3 className="text-base font-bold text-[var(--text-display)] flex items-center gap-2">
+              <Plus className="w-4.5 h-4.5 text-[#FF385C]" />
+              Deploy New AI Copilot Agent
+            </h3>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                  Copilot Assistant Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={copilotName}
+                  onChange={(e) => setCopilotName(e.target.value)}
+                  placeholder="e.g. VIP Concierge & Upgrade Agent"
+                  style={{ borderRadius: '10px' }}
+                  className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    AI Model Base
+                  </label>
+                  <select
+                    value={copilotModel}
+                    onChange={(e) => setCopilotModel(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Gemini 1.5 Pro">Gemini 1.5 Pro</option>
+                    <option value="Claude 3.5 Sonnet">Claude 3.5 Sonnet</option>
+                    <option value="GPT-4o Luxury">GPT-4o Luxury</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
+                    Automation Focus
+                  </label>
+                  <select
+                    value={copilotRole}
+                    onChange={(e) => setCopilotRole(e.target.value)}
+                    style={{ borderRadius: '10px' }}
+                    className="w-full px-3.5 py-2 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40"
+                  >
+                    <option value="Guest Messaging & Review Auto-Reply">Guest Messaging & Reviews</option>
+                    <option value="Yield Pricing Optimization">Yield Pricing & ADR</option>
+                    <option value="Housekeeping Priority Dispatch">Housekeeping Dispatch</option>
+                    <option value="Night Audit Reconciler">Night Audit Reconciler</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-black/[0.06] dark:border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowNewCopilotModal(false)}
+                className="btn-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="btn-primary"
+              >
+                Deploy Copilot Agent
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
