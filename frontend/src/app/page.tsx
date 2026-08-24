@@ -200,8 +200,8 @@ export default function LandingPage() {
             <div className="p-2.5 rounded-3xl bg-gradient-to-tr from-[#FF385C]/30 via-black/10 to-[#387FF7]/30 backdrop-blur-xl shadow-2xl relative">
               
               {/* Floating Live AI Badge */}
-              <div className="absolute -top-4 right-6 sm:right-12 z-20 px-3.5 py-1.5 rounded-full bg-[#19B26B] text-white text-xs font-bold shadow-lg flex items-center gap-2 animate-bounce">
-                <Sparkles className="w-3.5 h-3.5 text-white" />
+              <div className="absolute -top-4 right-6 sm:right-12 z-20 px-3.5 py-1.5 rounded-full bg-[#19B26B] text-white text-xs font-bold shadow-lg flex items-center gap-2 animate-floatSlow">
+                <Sparkles className="w-3.5 h-3.5 text-white animate-spin" />
                 <span>AI Concierge Signal: Room #102 Inspected</span>
               </div>
 
@@ -226,26 +226,26 @@ export default function LandingPage() {
                 <div className="p-4 sm:p-6 space-y-4">
                   {/* Top Bar Stats */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06] hover:border-[#FF385C]/40 transition-all">
                       <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">Occupancy</div>
                       <div className="text-base sm:text-lg font-extrabold text-[var(--text-display)] mt-0.5">88.4%</div>
                     </div>
-                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06] hover:border-[#FF385C]/40 transition-all">
                       <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">ADR</div>
                       <div className="text-base sm:text-lg font-extrabold text-[var(--text-display)] mt-0.5">Rp 1,420,000</div>
                     </div>
-                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06] hover:border-[#FF385C]/40 transition-all">
                       <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">RevPAR</div>
                       <div className="text-base sm:text-lg font-extrabold text-[#19B26B] mt-0.5">Rp 1,255,280</div>
                     </div>
-                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06]">
+                    <div className="p-3 bg-[var(--bg-left-panel)] rounded-xl border border-black/[0.04] dark:border-white/[0.06] hover:border-[#FF385C]/40 transition-all">
                       <div className="text-[10px] font-bold text-[var(--text-tertiary)] uppercase">Housekeeping</div>
                       <div className="text-base sm:text-lg font-extrabold text-[#387FF7] mt-0.5">62 Ready</div>
                     </div>
                   </div>
 
                   {/* Active Live Room Status Row */}
-                  <div className="p-3.5 bg-gradient-to-r from-[#FF385C]/10 via-[var(--bg-left-panel)] to-[var(--bg-left-panel)] rounded-xl border border-[#FF385C]/20 flex items-center justify-between text-xs">
+                  <div className="p-3.5 bg-gradient-to-r from-[#FF385C]/10 via-[var(--bg-left-panel)] to-[var(--bg-left-panel)] rounded-xl border border-[#FF385C]/20 flex items-center justify-between text-xs hover:border-[#FF385C]/50 transition-all">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-[#FF385C] text-white flex items-center justify-center font-bold">
                         AW
@@ -267,19 +267,19 @@ export default function LandingPage() {
 
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto pt-6">
-            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs">
+            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs card-interactive">
               <div className="text-xl sm:text-2xl font-extrabold text-[var(--text-display)]">1 screen</div>
               <div className="text-xs text-[var(--text-tertiary)] mt-0.5 font-medium">Front desk, housekeeping & revenue</div>
             </div>
-            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs">
+            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs card-interactive">
               <div className="text-xl sm:text-2xl font-extrabold text-[var(--text-display)]">&lt; 5 min</div>
               <div className="text-xs text-[var(--text-tertiary)] mt-0.5 font-medium">Morning handover, start to finish</div>
             </div>
-            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs">
+            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs card-interactive">
               <div className="text-xl sm:text-2xl font-extrabold text-[var(--text-display)]">24/7</div>
               <div className="text-xs text-[var(--text-tertiary)] mt-0.5 font-medium">Live pace & occupancy signals</div>
             </div>
-            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs">
+            <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] text-center shadow-xs card-interactive">
               <div className="text-xl sm:text-2xl font-extrabold text-[var(--text-display)]">3 roles</div>
               <div className="text-xs text-[var(--text-tertiary)] mt-0.5 font-medium">Scoped access per property</div>
             </div>
