@@ -176,42 +176,42 @@ export default function RoomsPage() {
           </div>
 
           {/* View Mode Switcher & Filter Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
             
             {/* View Tabs */}
-            <div className="flex items-center gap-2">
+            <div className="p-1 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] rounded-xl flex items-center gap-1 w-full md:w-auto shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('matrix')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'matrix'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
-                <Building className="w-3.5 h-3.5" />
-                <span>Live Room Availability Matrix</span>
+                <Building className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Availability Matrix</span>
+                <span className="hidden sm:inline">Live Room Availability Matrix</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('roster')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'roster'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
-                <Bed className="w-3.5 h-3.5" />
-                <span>Room Roster List</span>
+                <Bed className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Room Roster</span>
+                <span className="hidden sm:inline">Room Roster List</span>
               </button>
             </div>
 
             {/* Filters */}
-            <div className="flex items-center gap-3">
-              <div className="relative w-64">
+            <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto">
+              <div className="relative flex-1 md:w-64 min-w-[160px]">
                 <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
                 <input
                   type="text"
@@ -219,7 +219,7 @@ export default function RoomsPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Filter by room # or guest..."
                   style={{ borderRadius: '10px' }}
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                  className="w-full pl-8 pr-3 h-9 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
                 />
               </div>
 
@@ -227,7 +227,7 @@ export default function RoomsPage() {
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 style={{ borderRadius: '10px' }}
-                className="h-8 px-3 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] cursor-pointer focus:outline-none"
+                className="h-9 px-3 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] cursor-pointer focus:outline-none flex-1 md:flex-initial"
               >
                 <option value="All">All Statuses</option>
                 <option value="Occupied">Occupied</option>

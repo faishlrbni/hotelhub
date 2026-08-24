@@ -154,41 +154,41 @@ export default function HousekeepingPage() {
           </div>
 
           {/* View Mode Switcher & Filter Controls Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
             
             {/* View Tabs */}
-            <div className="flex items-center gap-2">
+            <div className="p-1 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] rounded-xl flex items-center gap-1 w-full md:w-auto shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('kanban')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'kanban'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
-                <Layers className="w-3.5 h-3.5" />
-                <span>Kanban Turnover Board</span>
+                <Layers className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Kanban Board</span>
+                <span className="hidden sm:inline">Kanban Turnover Board</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('queue')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'queue'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Priority Cleaning Queue</span>
+                <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Cleaning Queue</span>
+                <span className="hidden sm:inline">Priority Cleaning Queue</span>
               </button>
             </div>
 
             {/* Filter Input */}
-            <div className="relative w-64">
+            <div className="relative w-full md:w-64 shrink-0">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
               <input
                 type="text"
@@ -196,7 +196,7 @@ export default function HousekeepingPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Filter by room or staff..."
                 style={{ borderRadius: '10px' }}
-                className="w-full pl-8 pr-3 py-1.5 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                className="w-full pl-8 pr-3 h-9 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
               />
             </div>
           </div>

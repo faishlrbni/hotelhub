@@ -166,47 +166,47 @@ export default function RevenuePage() {
           </div>
 
           {/* View Mode Switcher */}
-          <div className="flex items-center gap-2 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
+          <div className="p-1 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] rounded-xl flex items-center gap-1 w-full md:w-auto shrink-0 border-b border-black/[0.06] dark:border-white/[0.08]">
             <button
               type="button"
               onClick={() => setActiveTab('ai')}
-              style={{ borderRadius: '10px' }}
-              className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                 activeTab === 'ai'
                   ? 'bg-[#FF385C] text-white shadow-xs'
-                  : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                  : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Yield Suggestions</span>
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">AI Suggestions</span>
+              <span className="hidden sm:inline">AI Yield Suggestions</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('trends')}
-              style={{ borderRadius: '10px' }}
-              className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                 activeTab === 'trends'
                   ? 'bg-[#FF385C] text-white shadow-xs'
-                  : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                  : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
               }`}
             >
-              <BarChart3 className="w-3.5 h-3.5" />
-              <span>Revenue Trends & Channel Mix</span>
+              <BarChart3 className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Revenue Trends</span>
+              <span className="hidden sm:inline">Revenue Trends & Channel Mix</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('matrix')}
-              style={{ borderRadius: '10px' }}
-              className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                 activeTab === 'matrix'
                   ? 'bg-[#FF385C] text-white shadow-xs'
-                  : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                  : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
               }`}
             >
-              <Tag className="w-3.5 h-3.5" />
-              <span>Room Rate Matrix</span>
+              <Tag className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">Rate Matrix</span>
+              <span className="hidden sm:inline">Room Rate Matrix</span>
             </button>
           </div>
 

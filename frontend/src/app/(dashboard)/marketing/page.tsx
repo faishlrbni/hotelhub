@@ -290,59 +290,62 @@ export default function MarketingPage() {
       </div>
 
       {/* 3. Workspace Controls: Tab Switcher & Search Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         
         {/* Workspace View Tabs */}
         <div 
           style={{ borderRadius: '14px' }}
-          className="p-1 bg-[var(--bg-card)] border border-black/[0.04] dark:border-white/[0.08] flex items-center gap-1 w-full md:w-auto shrink-0 overflow-x-auto no-scrollbar"
+          className="p-1 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] flex items-center gap-1 w-full md:w-auto shrink-0"
         >
           <button
             type="button"
             onClick={() => setActiveTab('campaigns')}
             style={{ borderRadius: '10px' }}
-            className={`px-3.5 sm:px-4 py-2 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-2 ${
+            className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'campaigns'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
             }`}
           >
             <Megaphone className="w-3.5 h-3.5 shrink-0" />
-            <span>Active Campaigns & ROI</span>
+            <span className="sm:hidden">Campaigns</span>
+            <span className="hidden sm:inline">Active Campaigns & ROI</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('coupons')}
             style={{ borderRadius: '10px' }}
-            className={`px-3.5 sm:px-4 py-2 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-2 ${
+            className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'coupons'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
             }`}
           >
             <Tag className="w-3.5 h-3.5 shrink-0" />
-            <span>Promo Codes & Usage</span>
+            <span className="sm:hidden">Promo Codes</span>
+            <span className="hidden sm:inline">Promo Codes & Usage</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('channels')}
             style={{ borderRadius: '10px' }}
-            className={`px-4 py-2 text-xs font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'channels'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
             }`}
           >
-            <Share2 className="w-3.5 h-3.5" />
-            <span>Channel Attribution</span>
+            <Share2 className="w-3.5 h-3.5 shrink-0" />
+            <span className="sm:hidden">Channels</span>
+            <span className="hidden sm:inline">Channel Attribution</span>
           </button>
         </div>
 
         {/* Search & Status Filter */}
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64 min-w-[160px]">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
             <input
               type="text"
@@ -350,12 +353,12 @@ export default function MarketingPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ borderRadius: '10px' }}
-              className="h-9 pl-9 pr-3 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-hidden focus:border-[#FF385C] w-48 sm:w-64 transition-all"
+              className="h-9 pl-9 pr-3 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-hidden focus:border-[#FF385C] w-full transition-all"
             />
           </div>
 
-          <div className="flex items-center gap-1">
-            <Filter className="w-3.5 h-3.5 text-[var(--text-tertiary)] shrink-0" />
+          <div className="flex items-center gap-1 flex-1 md:flex-initial">
+            <Filter className="w-3.5 h-3.5 text-[var(--text-tertiary)] shrink-0 hidden sm:block" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
