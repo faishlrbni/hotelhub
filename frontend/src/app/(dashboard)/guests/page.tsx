@@ -264,61 +264,64 @@ export default function GuestsPage() {
           </div>
 
           {/* View Mode Navigation Tabs */}
-          <div className="flex items-center justify-between border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar w-full sm:w-auto shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('cards')}
                 style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'cards'
                     ? 'bg-[#FF385C] text-white shadow-xs'
                     : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
                 }`}
               >
-                <Users className="w-3.5 h-3.5" />
-                <span>Guest Directory Cards</span>
+                <Users className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Directory</span>
+                <span className="hidden sm:inline">Guest Directory Cards</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('activity')}
                 style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'activity'
                     ? 'bg-[#FF385C] text-white shadow-xs'
                     : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
                 }`}
               >
-                <Tag className="w-3.5 h-3.5" />
-                <span>Recent Activity List</span>
+                <Tag className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Activity</span>
+                <span className="hidden sm:inline">Recent Activity List</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('profile')}
                 style={{ borderRadius: '10px' }}
-                className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeTab === 'profile'
                     ? 'bg-[#FF385C] text-white shadow-xs'
                     : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
                 }`}
               >
-                <UserCheck className="w-3.5 h-3.5" />
-                <span>Full Profile & Booking Info</span>
+                <UserCheck className="w-3.5 h-3.5 shrink-0" />
+                <span className="sm:hidden">Profile Info</span>
+                <span className="hidden sm:inline">Full Profile & Booking Info</span>
               </button>
             </div>
 
             {/* Quick Search Bar */}
-            <div className="relative w-full sm:w-64">
+            <div className="relative w-full sm:w-64 shrink-0">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Filter guests by name, email, phone or room..."
+                placeholder="Filter guests by name, email, phone..."
                 style={{ borderRadius: '10px' }}
-                className="w-full pl-8 pr-8 py-1.5 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
+                className="w-full pl-8 pr-8 h-9 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all"
               />
               {searchQuery && (
                 <button

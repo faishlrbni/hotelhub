@@ -204,7 +204,7 @@ export default function ReviewsPage() {
         title="Latest reviews"
         subtitle="Live feedback feed across Google, Booking.com, TripAdvisor & Expedia"
         headerAction={
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar max-w-full shrink-0">
             {(['All', 'Needs Reply', 'POSITIVE', 'NEUTRAL'] as const).map((tab) => (
               <button
                 key={tab}

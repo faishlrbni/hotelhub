@@ -260,18 +260,18 @@ export default function ReservationsPage() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
         
         {/* Workspace View Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 lg:pb-0 no-scrollbar w-full lg:w-auto shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('table')}
             style={{ borderRadius: '10px' }}
-            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'table'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
             }`}
           >
-            <CalendarDays className="w-3.5 h-3.5" />
+            <CalendarDays className="w-3.5 h-3.5 shrink-0" />
             <span>Active Bookings</span>
           </button>
 
@@ -279,13 +279,13 @@ export default function ReservationsPage() {
             type="button"
             onClick={() => setActiveTab('upcoming')}
             style={{ borderRadius: '10px' }}
-            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'upcoming'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
             }`}
           >
-            <Clock className="w-3.5 h-3.5" />
+            <Clock className="w-3.5 h-3.5 shrink-0" />
             <span>Upcoming & Arrivals</span>
           </button>
         </div>
