@@ -204,17 +204,16 @@ export default function ReviewsPage() {
         title="Latest reviews"
         subtitle="Live feedback feed across Google, Booking.com, TripAdvisor & Expedia"
         headerAction={
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar max-w-full shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 p-1 bg-black/[0.03] dark:bg-white/[0.04] rounded-xl w-full sm:w-auto shrink-0">
             {(['All', 'Needs Reply', 'POSITIVE', 'NEUTRAL'] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                style={{ borderRadius: '9999px' }}
-                className={`px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-semibold whitespace-nowrap flex-1 sm:flex-initial justify-center text-center transition-all cursor-pointer rounded-lg ${
                   activeTab === tab
-                    ? 'bg-[#181D27] dark:bg-white text-white dark:text-[#181D27] shadow-xs'
-                    : 'bg-black/[0.03] dark:bg-white/[0.04] text-[var(--text-tertiary)] hover:bg-black/[0.06] dark:hover:bg-white/[0.08]'
+                    ? 'bg-[#FF385C] text-white shadow-xs'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
                 {tab}

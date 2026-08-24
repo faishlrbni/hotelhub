@@ -265,47 +265,44 @@ export default function GuestsPage() {
 
           {/* View Mode Navigation Tabs */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 md:pb-0 no-scrollbar w-full md:w-auto shrink-0 min-w-0">
+            <div className="p-1 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] rounded-xl flex items-center gap-1 w-full md:w-auto shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('cards')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'cards'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
                 <Users className="w-3.5 h-3.5 shrink-0" />
-                <span className="whitespace-nowrap inline-block">Guest Directory</span>
+                <span className="whitespace-nowrap inline-block">Directory</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('activity')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'activity'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
                 <Tag className="w-3.5 h-3.5 shrink-0" />
-                <span className="whitespace-nowrap inline-block">Recent Activity</span>
+                <span className="whitespace-nowrap inline-block">Activity</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setActiveTab('profile')}
-                style={{ borderRadius: '10px' }}
-                className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`h-9 px-3 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
                   activeTab === 'profile'
                     ? 'bg-[#FF385C] text-white shadow-xs'
-                    : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
                 }`}
               >
                 <UserCheck className="w-3.5 h-3.5 shrink-0" />
-                <span className="whitespace-nowrap inline-block">Profile & Booking</span>
+                <span className="whitespace-nowrap inline-block">Profile Info</span>
               </button>
             </div>
 

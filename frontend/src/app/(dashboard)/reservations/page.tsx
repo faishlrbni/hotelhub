@@ -260,15 +260,14 @@ export default function ReservationsPage() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
         
         {/* Workspace View Tabs */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 lg:pb-0 no-scrollbar w-full lg:w-auto shrink-0">
+        <div className="p-1 bg-[var(--bg-card)] border border-black/[0.06] dark:border-white/[0.08] rounded-xl flex items-center gap-1 w-full lg:w-auto shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('table')}
-            style={{ borderRadius: '10px' }}
-            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 lg:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
               activeTab === 'table'
                 ? 'bg-[#FF385C] text-white shadow-xs'
-                : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
             }`}
           >
             <CalendarDays className="w-3.5 h-3.5 shrink-0" />
@@ -278,11 +277,10 @@ export default function ReservationsPage() {
           <button
             type="button"
             onClick={() => setActiveTab('upcoming')}
-            style={{ borderRadius: '10px' }}
-            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold whitespace-nowrap flex-1 lg:flex-initial justify-center transition-all cursor-pointer flex items-center gap-1.5 rounded-lg ${
               activeTab === 'upcoming'
                 ? 'bg-[#FF385C] text-white shadow-xs'
-                : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
+                : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
             }`}
           >
             <Clock className="w-3.5 h-3.5 shrink-0" />

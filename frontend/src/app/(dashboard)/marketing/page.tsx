@@ -295,13 +295,13 @@ export default function MarketingPage() {
         {/* Workspace View Tabs */}
         <div 
           style={{ borderRadius: '14px' }}
-          className="p-1 bg-[var(--bg-card)] border border-black/[0.04] dark:border-white/[0.08] flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full shrink-0"
+          className="p-1 bg-[var(--bg-card)] border border-black/[0.04] dark:border-white/[0.08] flex items-center gap-1 w-full md:w-auto shrink-0 overflow-x-auto no-scrollbar"
         >
           <button
             type="button"
             onClick={() => setActiveTab('campaigns')}
             style={{ borderRadius: '10px' }}
-            className={`px-3.5 sm:px-4 py-2 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-3.5 sm:px-4 py-2 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'campaigns'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
@@ -315,7 +315,7 @@ export default function MarketingPage() {
             type="button"
             onClick={() => setActiveTab('coupons')}
             style={{ borderRadius: '10px' }}
-            className={`px-3.5 sm:px-4 py-2 text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-3.5 sm:px-4 py-2 text-xs font-semibold whitespace-nowrap flex-1 md:flex-initial justify-center transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'coupons'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
