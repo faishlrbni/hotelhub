@@ -104,13 +104,12 @@ export default function RevenuePage() {
         </div>
 
         {/* Top Action Buttons */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
             onClick={handleExportReport}
             disabled={isExporting}
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-4 py-2 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+            className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Download className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
             <span>Export report</span>
@@ -118,8 +117,7 @@ export default function RevenuePage() {
 
           <button
             type="button"
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-[0_4px_14px_rgba(255,56,92,0.35)] flex items-center gap-1.5 transition-all cursor-pointer"
+            className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create promotion</span>

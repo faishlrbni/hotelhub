@@ -203,15 +203,16 @@ export default function ReservationsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setShowNewModal(true)}
-          style={{ borderRadius: '10px' }}
-          className="h-9 px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-xs transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Reservation</span>
-        </button>
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
+          <button
+            type="button"
+            onClick={() => setShowNewModal(true)}
+            className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>New Reservation</span>
+          </button>
+        </div>
       </div>
 
       {/* 2. Top KPI Cards (4 Grid - Reusable Component Standard) */}

@@ -147,15 +147,16 @@ export default function ReviewsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => handleOpenAiComposer(reviews.find((r: any) => !r.reply) || reviews[0])}
-          style={{ borderRadius: '9999px' }}
-          className="h-10 px-5 text-xs font-bold bg-[var(--text-display)] hover:bg-black/80 dark:hover:bg-white/80 text-[var(--bg-card)] shadow-xs transition-all cursor-pointer flex items-center gap-2 shrink-0"
-        >
-          <Sparkles className="w-4 h-4 text-[#FF385C]" />
-          <span>Draft reply with AI</span>
-        </button>
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
+          <button
+            type="button"
+            onClick={() => handleOpenAiComposer(reviews.find((r: any) => !r.reply) || reviews[0])}
+            className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Draft reply with AI</span>
+          </button>
+        </div>
       </div>
 
       {/* 2. Top KPI Cards (4 Grid - Reusable Component Standard) */}

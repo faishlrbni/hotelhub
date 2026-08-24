@@ -196,7 +196,7 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
           type="button"
           onClick={() => setShowQuickResModal(true)}
           style={{ borderRadius: '10px' }}
-          className="flex sm:hidden w-9 h-9 items-center justify-center bg-[#FF385C] text-white shadow-xs active:scale-95 cursor-pointer shrink-0"
+          className="flex sm:hidden w-9 h-9 items-center justify-center bg-[#FF385C] text-white shadow-[0_4px_12px_rgba(255,56,92,0.35)] active:scale-95 cursor-pointer shrink-0"
           title="New reservation"
         >
           <Plus className="w-4 h-4" />
@@ -206,10 +206,9 @@ export function TopBar({ onOpenMobileNav }: TopBarProps) {
         <button
           type="button"
           onClick={() => setShowQuickResModal(true)}
-          style={{ borderRadius: '10px' }}
-          className="hidden sm:flex items-center gap-1.5 h-9 px-4 py-2 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.96] shadow-xs cursor-pointer shrink-0"
+          className="hidden sm:inline-flex btn-secondary shrink-0"
         >
-          <Plus className="w-3.5 h-3.5 text-[#FF385C] transition-transform duration-200 group-hover:rotate-90" />
+          <Plus className="w-3.5 h-3.5 text-[#FF385C]" />
           <span>New reservation</span>
         </button>
 

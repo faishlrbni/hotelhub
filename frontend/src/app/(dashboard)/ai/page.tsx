@@ -118,11 +118,10 @@ export default function AiCenterPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-4 py-2 bg-[#181D27] dark:bg-white text-white dark:text-[#181D27] hover:opacity-90 text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+            className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>New copilot</span>

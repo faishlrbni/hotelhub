@@ -90,19 +90,17 @@ export default function HousekeepingPage() {
             </div>
 
             {/* Top Action Buttons */}
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
               <button
                 type="button"
-                style={{ borderRadius: '10px' }}
-                className="h-9 px-4 py-2 bg-[var(--bg-primary_solid, #181D27)] text-white text-xs font-semibold hover:opacity-90 transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
               >
-                <UserCheck className="w-3.5 h-3.5" />
+                <UserCheck className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
                 <span>Assign staff</span>
               </button>
               <button
                 type="button"
-                style={{ borderRadius: '10px' }}
-                className="h-9 px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-[0_4px_14px_rgba(255,56,92,0.35)] hover:shadow-[0_6px_20px_rgba(255,56,92,0.45)] flex items-center gap-1.5 transition-all cursor-pointer"
+                className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>New task</span>

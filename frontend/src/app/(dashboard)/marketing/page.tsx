@@ -230,20 +230,18 @@ export default function MarketingPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-4 text-xs font-semibold bg-[var(--bg-left-panel)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] hover:bg-black/[0.05] dark:hover:bg-white/[0.08] transition-all cursor-pointer flex items-center gap-1.5"
+            className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
           >
-            <BarChart3 className="w-3.5 h-3.5" />
+            <BarChart3 className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
             <span>Export Report</span>
           </button>
           <button
             type="button"
             onClick={() => setShowNewModal(true)}
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-xs transition-all cursor-pointer flex items-center gap-1.5"
+            className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>New Campaign</span>

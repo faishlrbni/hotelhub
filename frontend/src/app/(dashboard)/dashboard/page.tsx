@@ -140,13 +140,12 @@ Strategic Action Recommendations:
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto shrink-0">
           <button
             type="button"
             onClick={handleExportReport}
             disabled={isExporting}
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-3.5 sm:px-4 text-xs font-semibold bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-[0.98] disabled:opacity-70 flex-1 sm:flex-initial justify-center"
+            className="btn-secondary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             {isExporting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin text-[#FF385C]" />
@@ -159,8 +158,7 @@ Strategic Action Recommendations:
           <button
             type="button"
             onClick={handleGenerateAIReport}
-            style={{ borderRadius: '10px' }}
-            className="h-9 px-3.5 sm:px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-[0_4px_14px_rgba(255,56,92,0.35)] flex items-center gap-1.5 transition-all cursor-pointer active:scale-[0.98] flex-1 sm:flex-initial justify-center"
+            className="btn-primary w-full sm:w-auto flex-1 sm:flex-initial"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Generate AI Report</span>
