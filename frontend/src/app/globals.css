@@ -118,6 +118,15 @@
   .btn-secondary:active {
     transform: scale(0.97);
   }
+
+  /* Universal Tab & Button Text Protection (Prevents vertical text stacking) */
+  .whitespace-nowrap,
+  .whitespace-nowrap span,
+  button span,
+  .tab-button span {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+  }
 }
 
 /* ==========================================================================

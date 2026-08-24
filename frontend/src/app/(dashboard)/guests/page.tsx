@@ -264,8 +264,8 @@ export default function GuestsPage() {
           </div>
 
           {/* View Mode Navigation Tabs */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
-            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar w-full sm:w-auto shrink-0">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 md:pb-0 no-scrollbar w-full md:w-auto shrink-0 min-w-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('cards')}
@@ -277,8 +277,7 @@ export default function GuestsPage() {
                 }`}
               >
                 <Users className="w-3.5 h-3.5 shrink-0" />
-                <span className="sm:hidden">Directory</span>
-                <span className="hidden sm:inline">Guest Directory Cards</span>
+                <span className="whitespace-nowrap inline-block">Guest Directory</span>
               </button>
 
               <button
@@ -292,8 +291,7 @@ export default function GuestsPage() {
                 }`}
               >
                 <Tag className="w-3.5 h-3.5 shrink-0" />
-                <span className="sm:hidden">Activity</span>
-                <span className="hidden sm:inline">Recent Activity List</span>
+                <span className="whitespace-nowrap inline-block">Recent Activity</span>
               </button>
 
               <button
@@ -307,8 +305,7 @@ export default function GuestsPage() {
                 }`}
               >
                 <UserCheck className="w-3.5 h-3.5 shrink-0" />
-                <span className="sm:hidden">Profile Info</span>
-                <span className="hidden sm:inline">Full Profile & Booking Info</span>
+                <span className="whitespace-nowrap inline-block">Profile & Booking</span>
               </button>
             </div>
 
