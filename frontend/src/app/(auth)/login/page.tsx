@@ -92,7 +92,7 @@ export default function LoginPage() {
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-[var(--bg-canvas)] transition-colors duration-300">
       
       {/* LEFT PANEL — Marketing / Value Proposition */}
-      <div className="lg:w-1/2 w-full p-8 lg:p-16 flex flex-col justify-between bg-[var(--bg-left-panel)] border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/[0.08] transition-colors duration-300">
+      <div className="lg:w-1/2 w-full p-6 sm:p-8 lg:p-16 flex flex-col justify-between bg-[var(--bg-left-panel)] border-b lg:border-b-0 lg:border-r border-black/[0.06] dark:border-white/[0.08] transition-colors duration-300">
         
         {/* Top Header: Logo */}
         <div>
@@ -109,11 +109,11 @@ export default function LoginPage() {
           </div>
 
           {/* Main Headline & Description */}
-          <div className="mt-12 lg:mt-16 max-w-lg">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[var(--text-display)] leading-[1.15] tracking-tight">
+          <div className="mt-8 sm:mt-12 lg:mt-16 max-w-lg">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[var(--text-display)] leading-[1.15] tracking-tight">
               Run your property with a calm, clear view.
             </h1>
-            <p className="mt-4 text-base sm:text-lg text-[var(--text-tertiary)] leading-relaxed">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-lg text-[var(--text-tertiary)] leading-relaxed">
               One workspace for reservations, housekeeping, revenue and the AI signals that keep your team a step ahead.
             </p>
 

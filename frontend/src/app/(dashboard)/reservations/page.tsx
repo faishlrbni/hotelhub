@@ -256,29 +256,29 @@ export default function ReservationsPage() {
       </div>
 
       {/* 3. View Switcher Tabs & Filter Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-black/[0.06] dark:border-white/[0.08] pb-4">
         
         {/* Workspace View Tabs */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={() => setActiveTab('table')}
             style={{ borderRadius: '10px' }}
-            className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'table'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
             }`}
           >
             <CalendarDays className="w-3.5 h-3.5" />
-            <span>All Active Bookings Table</span>
+            <span>Active Bookings</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('upcoming')}
             style={{ borderRadius: '10px' }}
-            className={`h-9 px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+            className={`h-9 px-3.5 sm:px-4 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === 'upcoming'
                 ? 'bg-[#FF385C] text-white shadow-xs'
                 : 'bg-[var(--bg-card)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] border border-black/[0.06] dark:border-white/[0.08]'
@@ -290,14 +290,14 @@ export default function ReservationsPage() {
         </div>
 
         {/* Filter Controls */}
-        <div className="flex items-center gap-3">
-          <div className="relative w-48 sm:w-64">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="relative flex-1 sm:w-64 min-w-[180px]">
             <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter by guest name, room # or ID..."
+              placeholder="Filter guest, room or ID..."
               style={{ borderRadius: '10px' }}
               className="w-full pl-9 pr-3 h-9 text-xs bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-hidden focus:border-[#FF385C] transition-all"
             />
@@ -308,7 +308,7 @@ export default function ReservationsPage() {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             style={{ borderRadius: '10px' }}
-            className="h-9 px-3 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] cursor-pointer focus:outline-hidden"
+            className="h-9 px-3 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] cursor-pointer focus:outline-hidden flex-1 sm:flex-initial"
           >
             <option value="All">All Statuses</option>
             <option value="Checked In">Checked In</option>
@@ -322,7 +322,7 @@ export default function ReservationsPage() {
             value={channelFilter}
             onChange={(e) => setChannelFilter(e.target.value)}
             style={{ borderRadius: '10px' }}
-            className="h-9 px-3 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] cursor-pointer focus:outline-hidden"
+            className="h-9 px-3 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-xs font-semibold text-[var(--text-primary)] cursor-pointer focus:outline-hidden flex-1 sm:flex-initial"
           >
             <option value="All">All Channels</option>
             <option value="Direct">Direct</option>

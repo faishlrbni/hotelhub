@@ -13,11 +13,16 @@ import {
   Bed,
   LogOut,
   Sparkles,
+  Menu,
 } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import { useHotelStore } from '@/lib/store';
 
-export function TopBar() {
+interface TopBarProps {
+  onOpenMobileNav?: () => void;
+}
+
+export function TopBar({ onOpenMobileNav }: TopBarProps) {
   const {
     session,
     reservations,
@@ -81,7 +86,7 @@ export function TopBar() {
   };
 
   return (
-    <header className="h-16 border-b border-black/[0.06] dark:border-white/[0.08] bg-[var(--bg-card)] px-6 flex items-center justify-between sticky top-0 z-20 transition-colors relative">
+    <header className="h-16 border-b border-black/[0.06] dark:border-white/[0.08] bg-[var(--bg-card)] px-3 sm:px-6 flex items-center justify-between sticky top-0 z-20 transition-colors relative gap-2 sm:gap-4">
       
       {/* Toast Notification Banner */}
       {toastMessage && (
@@ -91,87 +96,113 @@ export function TopBar() {
         </div>
       )}
       
-      {/* Left: Search Bar with Live Popover Results */}
-      <div className="relative w-72 sm:w-96">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => {
-            setSearchQuery(e.target.value);
-            setShowSearchModal(e.target.value.length > 0);
-          }}
-          placeholder="Search reservations, guests, rooms..."
-          style={{ borderRadius: '9999px' }}
-          className="w-full pl-4 pr-11 py-2 text-xs bg-[var(--bg-left-panel)] border border-black/[0.06] dark:border-white/[0.08] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all shadow-xs"
-        />
-        <button 
+      {/* Left Section: Mobile Hamburger Toggle + Search Bar */}
+      <div className="flex items-center gap-2 flex-1 max-w-[200px] xs:max-w-xs sm:max-w-md">
+        
+        {/* Mobile Navigation Hamburger Menu Toggle Button */}
+        <button
           type="button"
-          onClick={() => setShowSearchModal(!showSearchModal)}
-          style={{ borderRadius: '50%' }}
-          className="w-7 h-7 absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#FF385C] text-white flex items-center justify-center hover:bg-[#E00B41] transition-all cursor-pointer shadow-xs"
+          onClick={onOpenMobileNav}
+          style={{ borderRadius: '10px' }}
+          className="md:hidden w-9 h-9 flex items-center justify-center border border-black/[0.06] dark:border-white/[0.08] text-[var(--text-primary)] hover:bg-[var(--bg-left-panel)] active:scale-95 transition-all cursor-pointer shrink-0"
+          title="Open Navigation Menu"
         >
-          <Search className="w-3.5 h-3.5" />
+          <Menu className="w-4 h-4" />
         </button>
 
-        {/* Live Search Results Overlay */}
-        {showSearchModal && searchQuery.trim() !== '' && (
-          <div 
-            style={{ borderRadius: '16px' }}
-            className="absolute top-12 left-0 right-0 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
+        {/* Search Bar Input */}
+        <div className="relative flex-1">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setShowSearchModal(e.target.value.length > 0);
+            }}
+            placeholder="Search reservations..."
+            style={{ borderRadius: '9999px' }}
+            className="w-full pl-3.5 pr-8 py-1.5 sm:py-2 text-xs bg-[var(--bg-left-panel)] border border-black/[0.06] dark:border-white/[0.08] text-[var(--text-primary)] placeholder-[var(--text-tertiary)] focus:outline-none focus:ring-2 focus:ring-[#FF385C]/40 transition-all shadow-xs"
+          />
+          <button 
+            type="button"
+            onClick={() => setShowSearchModal(!showSearchModal)}
+            style={{ borderRadius: '50%' }}
+            className="w-6 h-6 sm:w-7 sm:h-7 absolute right-1 top-1/2 -translate-y-1/2 bg-[#FF385C] text-white flex items-center justify-center hover:bg-[#E00B41] transition-all cursor-pointer shadow-xs"
           >
-            <div className="flex items-center justify-between text-[11px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">
-              <span>Matching Reservations ({filteredRes.length})</span>
-              <button
-                type="button"
-                onClick={() => setShowSearchModal(false)}
-                className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          </button>
 
-            <div className="space-y-1.5 max-h-60 overflow-y-auto">
-              {filteredRes.length === 0 ? (
-                <div className="text-xs text-[var(--text-tertiary)] py-2 text-center">
-                  No matching records found.
-                </div>
-              ) : (
-                filteredRes.slice(0, 4).map((r: any) => (
-                  <div
-                    key={r.id}
-                    onClick={() => {
-                      setShowSearchModal(false);
-                      window.location.href = '/reservations';
-                    }}
-                    style={{ borderRadius: '10px' }}
-                    className="p-2.5 bg-[var(--bg-left-panel)] border border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer transition-all"
-                  >
-                    <div>
-                      <div className="font-bold text-xs text-[var(--text-primary)]">
-                        {r.guestName} <span className="font-mono text-[10px] text-[var(--text-tertiary)]">({r.ref})</span>
-                      </div>
-                      <div className="text-[10px] text-[var(--text-tertiary)]">
-                        {r.room} · {r.category}
-                      </div>
-                    </div>
-                    <span 
-                      style={{ borderRadius: '6px' }}
-                      className="px-2 py-0.5 text-[9px] font-extrabold bg-[#19B26B]/15 text-[#19B26B]"
-                    >
-                      {r.status}
-                    </span>
+          {/* Live Search Results Overlay */}
+          {showSearchModal && searchQuery.trim() !== '' && (
+            <div 
+              style={{ borderRadius: '16px' }}
+              className="absolute top-12 left-0 w-[calc(100vw-2.5rem)] sm:w-96 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
+            >
+              <div className="flex items-center justify-between text-[11px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider">
+                <span>Matching Reservations ({filteredRes.length})</span>
+                <button
+                  type="button"
+                  onClick={() => setShowSearchModal(false)}
+                  className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)]"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="space-y-1.5 max-h-60 overflow-y-auto">
+                {filteredRes.length === 0 ? (
+                  <div className="text-xs text-[var(--text-tertiary)] py-2 text-center">
+                    No matching records found.
                   </div>
-                ))
-              )}
+                ) : (
+                  filteredRes.slice(0, 4).map((r: any) => (
+                    <div
+                      key={r.id}
+                      onClick={() => {
+                        setShowSearchModal(false);
+                        window.location.href = '/reservations';
+                      }}
+                      style={{ borderRadius: '10px' }}
+                      className="p-2.5 bg-[var(--bg-left-panel)] border border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between hover:bg-black/[0.03] dark:hover:bg-white/[0.04] cursor-pointer transition-all"
+                    >
+                      <div>
+                        <div className="font-bold text-xs text-[var(--text-primary)]">
+                          {r.guestName} <span className="font-mono text-[10px] text-[var(--text-tertiary)]">({r.ref})</span>
+                        </div>
+                        <div className="text-[10px] text-[var(--text-tertiary)]">
+                          {r.room} · {r.category}
+                        </div>
+                      </div>
+                      <span 
+                        style={{ borderRadius: '6px' }}
+                        className="px-2 py-0.5 text-[9px] font-extrabold bg-[#19B26B]/15 text-[#19B26B]"
+                      >
+                        {r.status}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
         
-        {/* New Reservation Action Button */}
+        {/* Mobile Compact + New Reservation Button */}
+        <button
+          type="button"
+          onClick={() => setShowQuickResModal(true)}
+          style={{ borderRadius: '10px' }}
+          className="flex sm:hidden w-9 h-9 items-center justify-center bg-[#FF385C] text-white shadow-xs active:scale-95 cursor-pointer shrink-0"
+          title="New reservation"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
+
+        {/* Desktop New Reservation Action Button */}
         <button
           type="button"
           onClick={() => setShowQuickResModal(true)}
@@ -191,7 +222,7 @@ export function TopBar() {
             type="button"
             onClick={() => setShowNotifDrawer(!showNotifDrawer)}
             style={{ borderRadius: '50%' }}
-            className="relative w-9 h-9 flex items-center justify-center border border-black/[0.06] dark:border-white/[0.08] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-left-panel)] transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+            className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center border border-black/[0.06] dark:border-white/[0.08] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-left-panel)] transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
@@ -208,7 +239,7 @@ export function TopBar() {
           {showNotifDrawer && (
             <div 
               style={{ borderRadius: '16px' }}
-              className="absolute top-12 right-0 w-80 sm:w-96 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
+              className="absolute top-12 right-0 w-[calc(100vw-2rem)] sm:w-96 max-w-sm bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
             >
               <div className="flex items-center justify-between border-b border-black/[0.04] dark:border-white/[0.06] pb-3">
                 <div className="flex items-center gap-2">
@@ -262,7 +293,7 @@ export function TopBar() {
             type="button"
             onClick={() => setShowUserMenu(!showUserMenu)}
             style={{ borderRadius: '9999px' }}
-            className="flex items-center gap-1.5 pl-1 pr-2 py-1 border border-black/[0.06] dark:border-white/[0.08] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all cursor-pointer"
+            className="flex items-center gap-1.5 pl-1 pr-1.5 sm:pr-2 py-1 border border-black/[0.06] dark:border-white/[0.08] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all cursor-pointer"
           >
             <div 
               style={{ borderRadius: '50%' }}
@@ -270,14 +301,14 @@ export function TopBar() {
             >
               {session.avatar || 'AS'}
             </div>
-            <ChevronDown className="w-3.5 h-3.5 text-[var(--text-tertiary)]" />
+            <ChevronDown className="w-3.5 h-3.5 text-[var(--text-tertiary)] hidden xs:block" />
           </button>
 
           {/* User Profile Menu */}
           {showUserMenu && (
             <div 
               style={{ borderRadius: '16px' }}
-              className="absolute top-12 right-0 w-64 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
+              className="absolute top-12 right-0 w-64 max-w-[calc(100vw-2rem)] bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-150"
             >
               <div className="border-b border-black/[0.04] dark:border-white/[0.06] pb-3">
                 <div className="font-bold text-xs text-[var(--text-primary)]">
@@ -327,7 +358,7 @@ export function TopBar() {
           <form
             onSubmit={handleCreateQuickRes}
             style={{ borderRadius: '24px' }}
-            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative"
+            className="w-full max-w-md bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto"
           >
             <button
               type="button"
@@ -375,7 +406,7 @@ export function TopBar() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-[var(--text-primary)] mb-1">
                     Stay Duration

@@ -140,13 +140,13 @@ Strategic Action Recommendations:
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
           <button
             type="button"
             onClick={handleExportReport}
             disabled={isExporting}
             style={{ borderRadius: '10px' }}
-            className="h-9 px-4 text-xs font-semibold bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-[0.98] disabled:opacity-70"
+            className="h-9 px-3.5 sm:px-4 text-xs font-semibold bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-[0.98] disabled:opacity-70 flex-1 sm:flex-initial justify-center"
           >
             {isExporting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin text-[#FF385C]" />
@@ -160,7 +160,7 @@ Strategic Action Recommendations:
             type="button"
             onClick={handleGenerateAIReport}
             style={{ borderRadius: '10px' }}
-            className="h-9 px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-[0_4px_14px_rgba(255,56,92,0.35)] flex items-center gap-1.5 transition-all cursor-pointer active:scale-[0.98]"
+            className="h-9 px-3.5 sm:px-4 text-xs font-semibold bg-[#FF385C] hover:bg-[#E00B41] text-white shadow-[0_4px_14px_rgba(255,56,92,0.35)] flex items-center gap-1.5 transition-all cursor-pointer active:scale-[0.98] flex-1 sm:flex-initial justify-center"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Generate AI Report</span>
@@ -544,83 +544,87 @@ Strategic Action Recommendations:
               </Link>
             }
           >
-            {/* Days Header */}
-            <div className="grid grid-cols-7 gap-3 text-center text-xs font-bold text-[var(--text-tertiary)] uppercase tracking-wider">
-              <span>MON</span>
-              <span>TUE</span>
-              <span>WED</span>
-              <span>THU</span>
-              <span>FRI</span>
-              <span>SAT</span>
-              <span>SUN</span>
-            </div>
+            <div className="overflow-x-auto pb-2">
+              <div className="min-w-[540px]">
+                {/* Days Header */}
+                <div className="grid grid-cols-7 gap-3 text-center text-xs font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-3">
+                  <span>MON</span>
+                  <span>TUE</span>
+                  <span>WED</span>
+                  <span>THU</span>
+                  <span>FRI</span>
+                  <span>SAT</span>
+                  <span>SUN</span>
+                </div>
 
-            {/* 5 Weeks Grid */}
-            <div className="space-y-3">
-              {[
-                [
-                  { day: '20', val: '80%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
-                  { day: '21', val: '87%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '22', val: '89%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '23', val: '68%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '24', val: '79%', color: 'bg-emerald-200 dark:bg-emerald-900/50 text-emerald-900 dark:text-emerald-200' },
-                  { day: '25', val: '91%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '26', val: '84%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
-                ],
-                [
-                  { day: '27', val: '75%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '28', val: '86%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '29', val: '88%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '30', val: '72%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '31', val: '60%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
-                  { day: '01', val: '93%', color: 'bg-rose-300 dark:bg-rose-900/70 text-rose-950 dark:text-rose-100' },
-                  { day: '02', val: '90%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                ],
-                [
-                  { day: '03', val: '70%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '04', val: '82%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
-                  { day: '05', val: '85%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '06', val: '76%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '07', val: '65%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
-                  { day: '08', val: '89%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '09', val: '86%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                ],
-                [
-                  { day: '10', val: '77%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '11', val: '83%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
-                  { day: '12', val: '85%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '13', val: '78%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '14', val: '62%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
-                  { day: '15', val: '95%', color: 'bg-rose-300 dark:bg-rose-900/70 text-rose-950 dark:text-rose-100' },
-                  { day: '16', val: '92%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                ],
-                [
-                  { day: '17', val: '74%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '18', val: '84%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
-                  { day: '19', val: '87%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '20', val: '76%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
-                  { day: '21', val: '63%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
-                  { day: '22', val: '88%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                  { day: '23', val: '87%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
-                ],
-              ].map((week, wIdx) => (
-                <div key={wIdx} className="grid grid-cols-7 gap-3">
-                  {week.map((cell, cIdx) => (
-                    <div
-                      key={cIdx}
-                      style={{ borderRadius: '16px' }}
-                      className={`p-3 h-20 flex flex-col justify-between transition-all hover:scale-[1.02] cursor-pointer ${cell.color}`}
-                    >
-                      <div className="text-right text-xs font-bold opacity-90">
-                        {cell.val}
-                      </div>
-                      <div className="text-xs font-bold">
-                        {cell.day}
-                      </div>
+                {/* 5 Weeks Grid */}
+                <div className="space-y-3">
+                  {[
+                    [
+                      { day: '20', val: '80%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
+                      { day: '21', val: '87%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '22', val: '89%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '23', val: '68%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '24', val: '79%', color: 'bg-emerald-200 dark:bg-emerald-900/50 text-emerald-900 dark:text-emerald-200' },
+                      { day: '25', val: '91%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '26', val: '84%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
+                    ],
+                    [
+                      { day: '27', val: '75%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '28', val: '86%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '29', val: '88%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '30', val: '72%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '31', val: '60%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
+                      { day: '01', val: '93%', color: 'bg-rose-300 dark:bg-rose-900/70 text-rose-950 dark:text-rose-100' },
+                      { day: '02', val: '90%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                    ],
+                    [
+                      { day: '03', val: '70%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '04', val: '82%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
+                      { day: '05', val: '85%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '06', val: '76%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '07', val: '65%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
+                      { day: '08', val: '89%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '09', val: '86%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                    ],
+                    [
+                      { day: '10', val: '77%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '11', val: '83%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
+                      { day: '12', val: '85%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '13', val: '78%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '14', val: '62%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
+                      { day: '15', val: '95%', color: 'bg-rose-300 dark:bg-rose-900/70 text-rose-950 dark:text-rose-100' },
+                      { day: '16', val: '92%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                    ],
+                    [
+                      { day: '17', val: '74%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '18', val: '84%', color: 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300' },
+                      { day: '19', val: '87%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '20', val: '76%', color: 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300' },
+                      { day: '21', val: '63%', color: 'bg-amber-100 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300' },
+                      { day: '22', val: '88%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                      { day: '23', val: '87%', color: 'bg-rose-200 dark:bg-rose-900/50 text-rose-900 dark:text-rose-200' },
+                    ],
+                  ].map((week, wIdx) => (
+                    <div key={wIdx} className="grid grid-cols-7 gap-3">
+                      {week.map((cell, cIdx) => (
+                        <div
+                          key={cIdx}
+                          style={{ borderRadius: '16px' }}
+                          className={`p-3 h-20 flex flex-col justify-between transition-all hover:scale-[1.02] cursor-pointer ${cell.color}`}
+                        >
+                          <div className="text-right text-xs font-bold opacity-90">
+                            {cell.val}
+                          </div>
+                          <div className="text-xs font-bold">
+                            {cell.day}
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
-              ))}
+              </div>
             </div>
 
             {/* Heatmap Footer Legend Bar */}
