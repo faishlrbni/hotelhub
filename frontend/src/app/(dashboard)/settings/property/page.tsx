@@ -213,11 +213,18 @@ export default function SettingsPropertyPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setToastMessage('✓ Property profile saved successfully!');
+                  if (activeProperty && setActiveProperty) {
+                    setActiveProperty({
+                      id: activeProperty.id,
+                      name: hotelName,
+                      rooms: Number(roomCount) || 120,
+                      location,
+                    });
+                  }
+                  setToastMessage(`✓ Property profile updated for "${hotelName}"!`);
                   setTimeout(() => setToastMessage(''), 4500);
                 }}
-                style={{ borderRadius: '10px' }}
-                className="h-8 px-3.5 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                className="btn-primary"
               >
                 <Save className="w-3.5 h-3.5" />
                 <span>Save Changes</span>
@@ -280,27 +287,7 @@ export default function SettingsPropertyPage() {
                   <option value="AUD ($)">AUD ($) — Australian Dollar</option>
                 </select>
               </div>
-
-              <div className="pt-2 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveProperty({
-                        id: activeProperty.id,
-                        name: hotelName,
-                        rooms: Number(roomCount) || 120,
-                        location,
-                      });
-                      setToastMessage(`✓ Property profile updated for ${hotelName}!`);
-                      setTimeout(() => setToastMessage(''), 4500);
-                    }}
-                    style={{ borderRadius: '10px' }}
-                    className="h-9 px-4 py-2 bg-[#FF385C] hover:bg-[#E00B41] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
-                  >
-                    Save Property Profile
-                  </button>
-                </div>
-              </div>
+            </div>
           </SectionCard>
         </div>
 

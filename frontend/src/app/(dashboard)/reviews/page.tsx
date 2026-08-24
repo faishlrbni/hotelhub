@@ -328,9 +328,11 @@ export default function ReviewsPage() {
               <h3 className="text-base font-bold text-[var(--text-display)] tracking-tight">
                 Draft Response for {selectedReview.author}
               </h3>
-              <p className="text-xs text-[var(--text-tertiary)] mt-0.5 italic">
-                "{selectedReview.headline}"
-              </p>
+              {(selectedReview.headline || selectedReview.comment || selectedReview.text) && (
+                <p className="text-xs text-[var(--text-tertiary)] mt-1 italic leading-relaxed line-clamp-2">
+                  "{selectedReview.headline || selectedReview.comment || selectedReview.text}"
+                </p>
+              )}
             </div>
 
             {/* Tone Selector */}

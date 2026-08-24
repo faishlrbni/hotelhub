@@ -82,12 +82,21 @@ export interface HousekeepingTask {
 export interface MarketingCampaign {
   id: string;
   title: string;
+  name?: string;
   status: 'Active' | 'Scheduled' | 'Ended';
   type: string;
+  channel?: string;
+  discount?: string;
   spent: string;
+  spend?: string;
   revenue: string;
   roi: string;
   conversions: number;
+  redemptions?: number;
+  code?: string;
+  startDate?: string;
+  endDate?: string;
+  targetAudience?: string;
 }
 
 export interface CouponCode {
@@ -106,6 +115,9 @@ export interface ReviewItem {
   rating: number;
   sentiment: 'POSITIVE' | 'NEUTRAL' | 'CRITICAL';
   channel: 'Google' | 'Booking.com' | 'TripAdvisor' | 'Expedia';
+  platform?: string;
+  headline?: string;
+  text?: string;
   date: string;
   comment: string;
   tags: string[];
@@ -264,8 +276,44 @@ const INITIAL_HOUSEKEEPING: HousekeepingTask[] = [
 ];
 
 const INITIAL_CAMPAIGNS: MarketingCampaign[] = [
-  { id: 'CMP-001', title: 'Summer Escape 2026', status: 'Active', type: 'Email & Meta Ads', spent: 'Rp 12.5M', revenue: 'Rp 88.4M', roi: '+607%', conversions: 42 },
-  { id: 'CMP-002', title: 'Weekend Wellness Package', status: 'Active', type: 'Google Search Ads', spent: 'Rp 8.0M', revenue: 'Rp 45.2M', roi: '+465%', conversions: 24 },
+  { 
+    id: 'CMP-001', 
+    title: 'Summer Escape 2026', 
+    name: 'Summer Escape 2026',
+    status: 'Active', 
+    type: 'Email & Meta Ads', 
+    channel: 'Meta & Email Blast',
+    discount: '20% OFF Room Rate',
+    spent: 'Rp 12.5M', 
+    spend: 'Rp 12.5M',
+    revenue: 'Rp 88.4M', 
+    roi: '+607%', 
+    conversions: 42,
+    redemptions: 42,
+    code: 'SUMMER20',
+    startDate: 'Jul 01, 2026',
+    endDate: 'Aug 31, 2026',
+    targetAudience: 'Leisure Guests & VIP Subscribers'
+  },
+  { 
+    id: 'CMP-002', 
+    title: 'Weekend Wellness Package', 
+    name: 'Weekend Wellness Package',
+    status: 'Active', 
+    type: 'Google Search Ads', 
+    channel: 'Google Search Ads',
+    discount: 'Free Spa & Breakfast',
+    spent: 'Rp 8.0M', 
+    spend: 'Rp 8.0M',
+    revenue: 'Rp 45.2M', 
+    roi: '+465%', 
+    conversions: 24,
+    redemptions: 24,
+    code: 'WELLNESS2026',
+    startDate: 'Aug 01, 2026',
+    endDate: 'Sep 15, 2026',
+    targetAudience: 'Direct Search Visitors & Spa Enthusiasts'
+  },
 ];
 
 const INITIAL_COUPONS: CouponCode[] = [
@@ -281,8 +329,11 @@ const INITIAL_REVIEWS: ReviewItem[] = [
     rating: 5,
     sentiment: 'POSITIVE',
     channel: 'Google',
+    platform: 'Google Reviews',
     date: '2 hours ago',
+    headline: 'Exceptional stay & breathtaking ocean views!',
     comment: 'Exceptional stay! The ocean suite views were breathtaking and the AI room service concierge was unbelievably fast.',
+    text: 'Exceptional stay! The ocean suite views were breathtaking and the AI room service concierge was unbelievably fast.',
     tags: ['Ocean View', 'AI Concierge', 'Service'],
   },
   {
@@ -292,8 +343,11 @@ const INITIAL_REVIEWS: ReviewItem[] = [
     rating: 4,
     sentiment: 'POSITIVE',
     channel: 'Booking.com',
+    platform: 'Booking.com',
     date: 'Yesterday',
+    headline: 'Great property and smooth check-in process',
     comment: 'Great property and smooth check-in. Breakfast selection at the restaurant was world class.',
+    text: 'Great property and smooth check-in. Breakfast selection at the restaurant was world class.',
     tags: ['Breakfast', 'Check-in'],
     reply: 'Thank you Michael! We are thrilled you enjoyed your stay and breakfast selection.',
   },
