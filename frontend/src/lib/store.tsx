@@ -795,15 +795,26 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/onboarding';
   };
 
-  const registerNewProperty = (propertyData: { name: string; rooms: number; type?: string; location?: string }) => {
+  const registerNewProperty = (propertyData: { 
+    name: string; 
+    rooms: number; 
+    type?: string; 
+    location?: string;
+    address?: string;
+    city?: string;
+    phone?: string;
+    currency?: string;
+    star?: string;
+  }) => {
     const propName = propertyData.name || 'Imperial Resort Jakarta';
     const propRooms = propertyData.rooms || 48;
+    const propLoc = propertyData.city || propertyData.address || propertyData.location || 'Jakarta, Indonesia';
 
     const newProp: PropertyItem = {
       id: `prop-${Date.now()}`,
       name: propName,
       rooms: propRooms,
-      location: propertyData.location || 'Primary Location',
+      location: propLoc,
     };
 
     setProperties((prev) => {

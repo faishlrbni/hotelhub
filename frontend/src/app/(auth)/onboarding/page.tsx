@@ -19,19 +19,35 @@ import {
   ShieldCheck,
   Globe,
   Zap,
-  Hotel
+  Hotel,
+  MapPin,
+  Phone,
+  DollarSign,
+  Star
 } from 'lucide-react';
 import { useHotelStore } from '@/lib/store';
 import { ThemeToggle } from '@/components/layout/theme-toggle';
 
 export default function OnboardingPage() {
-  const router = RouterHook();
+  const router = useRouter();
   const store = useHotelStore() as any;
   const session = store?.session;
 
   const [step, setStep] = useState(1);
+
+  // Step 1: Detailed Property Information
+  const [propertyName, setPropertyName] = useState('Imperial Resort Jakarta');
+  const [propertyAddress, setPropertyAddress] = useState('Jl. Jend. Sudirman No. 88');
+  const [propertyCity, setPropertyCity] = useState('Jakarta, Indonesia');
+  const [propertyPhone, setPropertyPhone] = useState('+62 812-3456-7890');
+  const [propertyCurrency, setPropertyCurrency] = useState('IDR (Rp)');
+  const [propertyStar, setPropertyStar] = useState('5-Star Luxury Resort');
+
+  // Step 2: Property Type & Room Inventory Count
   const [propertyType, setPropertyType] = useState<'boutique' | 'resort' | 'city' | 'apartments'>('resort');
   const [roomCount, setRoomCount] = useState(48);
+
+  // Step 3: Modules & Team
   const [selectedModules, setSelectedModules] = useState<string[]>([
     'reservations',
     'housekeeping',
@@ -40,25 +56,29 @@ export default function OnboardingPage() {
   ]);
   const [teamInviteEmail, setTeamInviteEmail] = useState('');
   const [invitedTeam, setInvitedTeam] = useState<string[]>([]);
+
+  // Step 4: Booking Channels
   const [selectedChannels, setSelectedChannels] = useState<string[]>([
     'Booking.com',
     'Expedia'
   ]);
 
   const [isFinishing, setIsFinishing] = useState(false);
-  const [progressPercent, setProgressPercent] = useState(25);
+  const [progressPercent, setProgressPercent] = useState(20);
 
   useEffect(() => {
-    setProgressPercent(step * 25);
-  }, [step]);
+    if (session?.property && session.property !== 'Aria Hotel Bali') {
+      setPropertyName(session.property);
+    }
+  }, [session]);
 
-  function RouterHook() {
-    return useRouter();
-  }
+  useEffect(() => {
+    setProgressPercent(step * 20);
+  }, [step]);
 
   const toggleModule = (id: string) => {
     if (selectedModules.includes(id)) {
-      if (selectedModules.length === 1) return; // keep at least 1
+      if (selectedModules.length === 1) return;
       setSelectedModules(selectedModules.filter((m) => m !== id));
     } else {
       setSelectedModules([...selectedModules, id]);
@@ -89,7 +109,12 @@ export default function OnboardingPage() {
     setIsFinishing(true);
     if (store?.registerNewProperty) {
       store.registerNewProperty({
-        name: propertyName,
+        name: propertyName || 'Imperial Resort Jakarta',
+        address: propertyAddress,
+        city: propertyCity,
+        phone: propertyPhone,
+        currency: propertyCurrency,
+        star: propertyStar,
         rooms: roomCount,
         type: propertyType,
       });
@@ -100,7 +125,6 @@ export default function OnboardingPage() {
   };
 
   const userName = session?.name || 'Hotel Manager';
-  const propertyName = session?.property || 'Aria Hotel Bali';
 
   return (
     <div className="min-h-screen bg-[var(--bg-canvas)] text-[var(--text-primary)] flex flex-col justify-between transition-colors duration-300">
@@ -118,13 +142,15 @@ export default function OnboardingPage() {
 
         {/* Step Indicator Badges */}
         <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-[var(--text-tertiary)]">
-          <span className={`px-3 py-1 rounded-full transition-all ${step >= 1 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>1. Property</span>
+          <span className={`px-2.5 py-1 rounded-full transition-all ${step >= 1 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>1. Details</span>
           <span>→</span>
-          <span className={`px-3 py-1 rounded-full transition-all ${step >= 2 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>2. Modules</span>
+          <span className={`px-2.5 py-1 rounded-full transition-all ${step >= 2 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>2. Type & Rooms</span>
           <span>→</span>
-          <span className={`px-3 py-1 rounded-full transition-all ${step >= 3 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>3. Channels</span>
+          <span className={`px-2.5 py-1 rounded-full transition-all ${step >= 3 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>3. Modules</span>
           <span>→</span>
-          <span className={`px-3 py-1 rounded-full transition-all ${step >= 4 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>4. Launch</span>
+          <span className={`px-2.5 py-1 rounded-full transition-all ${step >= 4 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>4. Channels</span>
+          <span>→</span>
+          <span className={`px-2.5 py-1 rounded-full transition-all ${step >= 5 ? 'bg-[#FF385C]/10 text-[#FF385C] font-bold' : ''}`}>5. Launch</span>
         </div>
 
         <ThemeToggle />
@@ -133,7 +159,7 @@ export default function OnboardingPage() {
       {/* Progress Bar Header */}
       <div className="w-full bg-black/[0.04] dark:border-white/[0.06] h-1.5 overflow-hidden">
         <div 
-          className="bg-gradient-to-r from-[#FF385C] to-[#387FF7] h-full transition-all duration-500 ease-out"
+          className="bg-gradient-to-r from-[#FF385C] via-[#387FF7] to-[#19B26B] h-full transition-all duration-500 ease-out"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
@@ -141,25 +167,144 @@ export default function OnboardingPage() {
       {/* Main Form Content Container */}
       <main className="flex-1 max-w-3xl w-full mx-auto px-4 py-8 sm:py-12 flex flex-col justify-center">
         
-        {/* STEP 1: PROPERTY TYPE & SIZE */}
+        {/* STEP 1: PROPERTY DETAILS & LOCATION */}
         {step === 1 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-400">
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#FF385C] bg-[#FF385C]/10 px-3 py-1 rounded-full">
-                Step 1 of 4
+                Step 1 of 5
               </span>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
-                Welcome, {userName}! Let's set up {propertyName}.
+                Welcome, {userName}! Let's set up your property details.
               </h1>
               <p className="text-sm text-[var(--text-tertiary)]">
-                Tell us a little about your property so we can configure your default workspace settings.
+                Fill out the official name, address, contact information, and operating currency for your hotel.
+              </p>
+            </div>
+
+            <div className="p-6 bg-[var(--bg-card)] border border-black/[0.08] dark:border-white/[0.12] rounded-2xl space-y-5">
+              
+              {/* Property Name Input */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider flex items-center gap-2">
+                  <Hotel className="w-4 h-4 text-[#FF385C]" />
+                  <span>Property Name <span className="text-red-500">*</span></span>
+                </label>
+                <input 
+                  type="text"
+                  placeholder="e.g. Imperial Resort Jakarta"
+                  value={propertyName}
+                  onChange={(e) => setPropertyName(e.target.value)}
+                  className="w-full h-11 px-4 text-sm font-semibold rounded-xl bg-[var(--bg-canvas)] border border-black/[0.1] dark:border-white/[0.14] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
+                />
+              </div>
+
+              {/* Address & City Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-[#387FF7]" />
+                    <span>Street Address</span>
+                  </label>
+                  <input 
+                    type="text"
+                    placeholder="e.g. Jl. Jend. Sudirman No. 88"
+                    value={propertyAddress}
+                    onChange={(e) => setPropertyAddress(e.target.value)}
+                    className="w-full h-11 px-4 text-sm rounded-xl bg-[var(--bg-canvas)] border border-black/[0.1] dark:border-white/[0.14] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-[#19B26B]" />
+                    <span>City & Country</span>
+                  </label>
+                  <input 
+                    type="text"
+                    placeholder="e.g. Jakarta, Indonesia"
+                    value={propertyCity}
+                    onChange={(e) => setPropertyCity(e.target.value)}
+                    className="w-full h-11 px-4 text-sm rounded-xl bg-[var(--bg-canvas)] border border-black/[0.1] dark:border-white/[0.14] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
+                  />
+                </div>
+              </div>
+
+              {/* Phone & Currency Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1.5 sm:col-span-1">
+                  <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-purple-500" />
+                    <span>Phone Number</span>
+                  </label>
+                  <input 
+                    type="text"
+                    placeholder="+62 812-3456-7890"
+                    value={propertyPhone}
+                    onChange={(e) => setPropertyPhone(e.target.value)}
+                    className="w-full h-11 px-4 text-sm rounded-xl bg-[var(--bg-canvas)] border border-black/[0.1] dark:border-white/[0.14] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
+                  />
+                </div>
+
+                <div className="space-y-1.5 sm:col-span-1">
+                  <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider flex items-center gap-2">
+                    <DollarSign className="w-4 h-4 text-amber-500" />
+                    <span>Operating Currency</span>
+                  </label>
+                  <select 
+                    value={propertyCurrency}
+                    onChange={(e) => setPropertyCurrency(e.target.value)}
+                    className="w-full h-11 px-3 text-xs font-bold rounded-xl bg-[var(--bg-canvas)] border border-black/[0.1] dark:border-white/[0.14] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
+                  >
+                    <option value="IDR (Rp)">IDR - Indonesian Rupiah (Rp)</option>
+                    <option value="USD ($)">USD - US Dollar ($)</option>
+                    <option value="EUR (€)">EUR - Euro (€)</option>
+                    <option value="SGD (S$)">SGD - Singapore Dollar (S$)</option>
+                    <option value="AUD ($)">AUD - Australian Dollar ($)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5 sm:col-span-1">
+                  <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span>Property Tier</span>
+                  </label>
+                  <select 
+                    value={propertyStar}
+                    onChange={(e) => setPropertyStar(e.target.value)}
+                    className="w-full h-11 px-3 text-xs font-bold rounded-xl bg-[var(--bg-canvas)] border border-black/[0.1] dark:border-white/[0.14] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
+                  >
+                    <option value="5-Star Luxury Resort">5-Star Luxury Resort</option>
+                    <option value="4-Star Premium Hotel">4-Star Premium Hotel</option>
+                    <option value="3-Star Boutique Hotel">3-Star Boutique Hotel</option>
+                    <option value="Serviced Luxury Apartments">Serviced Apartments</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2: PROPERTY TYPE & SIZE */}
+        {step === 2 && (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-400">
+            <div className="space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#387FF7] bg-[#387FF7]/10 px-3 py-1 rounded-full">
+                Step 2 of 5
+              </span>
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
+                Select Property Type & Room Inventory
+              </h1>
+              <p className="text-sm text-[var(--text-tertiary)]">
+                This configures your default room categories, status dashboards, and housekeeping queues.
               </p>
             </div>
 
             {/* Property Type Grid */}
             <div className="space-y-3">
               <label className="text-xs font-bold text-[var(--text-display)] uppercase tracking-wider">
-                Select Property Type
+                Property Classification
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <button
@@ -255,18 +400,18 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 2: MODULE SELECTION & TEAM INVITES */}
-        {step === 2 && (
+        {/* STEP 3: MODULE SELECTION & TEAM INVITES */}
+        {step === 3 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-400">
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#387FF7] bg-[#387FF7]/10 px-3 py-1 rounded-full">
-                Step 2 of 4
+              <span className="text-xs font-bold uppercase tracking-wider text-purple-500 bg-purple-500/10 px-3 py-1 rounded-full">
+                Step 3 of 5
               </span>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
-                Configure your active modules & team.
+                Configure your active modules & staff invites.
               </h1>
               <p className="text-sm text-[var(--text-tertiary)]">
-                Choose the features your staff will see on Day 1. You can always change this later.
+                Choose the operational tools your team will access on Day 1.
               </p>
             </div>
 
@@ -347,7 +492,7 @@ export default function OnboardingPage() {
               <div className="flex gap-2">
                 <input 
                   type="email"
-                  placeholder="frontdesk@ariahotel.com"
+                  placeholder="frontdesk@hotelhub.com"
                   value={teamInviteEmail}
                   onChange={(e) => setTeamInviteEmail(e.target.value)}
                   className="flex-1 h-10 px-3.5 text-xs rounded-xl bg-[var(--bg-canvas)] border border-black/[0.08] dark:border-white/[0.12] text-[var(--text-primary)] focus:outline-none focus:border-[#FF385C]"
@@ -381,18 +526,18 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        {/* STEP 3: CHANNEL CONNECTIONS */}
-        {step === 3 && (
+        {/* STEP 4: CHANNEL CONNECTIONS */}
+        {step === 4 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-400">
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#19B26B] bg-[#19B26B]/10 px-3 py-1 rounded-full">
-                Step 3 of 4
+                Step 4 of 5
               </span>
               <h1 className="text-2xl sm:text-4xl font-extrabold text-[var(--text-display)] tracking-tight">
                 Connect your booking channels.
               </h1>
               <p className="text-sm text-[var(--text-tertiary)]">
-                Sync rates and reservations automatically. You can also skip this and start with sample data.
+                Sync rates and reservations automatically across major OTAs.
               </p>
             </div>
 
@@ -429,13 +574,13 @@ export default function OnboardingPage() {
 
             <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 font-medium flex items-center gap-3">
               <Zap className="w-4 h-4 shrink-0 text-amber-500" />
-              <span>Don't have your API keys handy? No worries — HotelHub starts pre-loaded with sample reservations so you can test right away.</span>
+              <span>Don't have your API keys handy? No worries — HotelHub pre-loads live demo reservations so you can start right away.</span>
             </div>
           </div>
         )}
 
-        {/* STEP 4: LAUNCH WORKSPACE */}
-        {step === 4 && (
+        {/* STEP 5: LAUNCH WORKSPACE */}
+        {step === 5 && (
           <div className="space-y-8 text-center animate-in fade-in zoom-in-95 duration-400">
             <div className="w-16 h-16 rounded-full bg-[#19B26B]/15 text-[#19B26B] flex items-center justify-center mx-auto shadow-lg">
               <CheckCircle2 className="w-8 h-8" />
@@ -443,13 +588,13 @@ export default function OnboardingPage() {
 
             <div className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-wider text-[#19B26B] bg-[#19B26B]/10 px-3 py-1 rounded-full">
-                Configuration Complete
+                Configuration Ready
               </span>
               <h1 className="text-3xl sm:text-5xl font-extrabold text-[var(--text-display)] tracking-tight">
                 Your workspace is ready!
               </h1>
               <p className="text-base text-[var(--text-tertiary)] max-w-md mx-auto">
-                We've configured {propertyName} with {roomCount} rooms, active team roles, and live demo inventory.
+                We're launching {propertyName} with custom room inventory and live operational state.
               </p>
             </div>
 
@@ -460,8 +605,20 @@ export default function OnboardingPage() {
                 <span className="font-bold text-[var(--text-display)]">{propertyName}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-black/[0.04] dark:border-white/[0.06]">
+                <span className="text-[var(--text-tertiary)]">Location</span>
+                <span className="font-bold text-[var(--text-display)]">{propertyCity}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-black/[0.04] dark:border-white/[0.06]">
+                <span className="text-[var(--text-tertiary)]">Property Tier</span>
+                <span className="font-bold text-[var(--text-display)]">{propertyStar}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-black/[0.04] dark:border-white/[0.06]">
                 <span className="text-[var(--text-tertiary)]">Room Inventory</span>
-                <span className="font-bold text-[var(--text-display)]">{roomCount} Rooms</span>
+                <span className="font-bold text-[#FF385C]">{roomCount} Rooms</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-black/[0.04] dark:border-white/[0.06]">
+                <span className="text-[var(--text-tertiary)]">Currency</span>
+                <span className="font-bold text-[var(--text-display)]">{propertyCurrency}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-black/[0.04] dark:border-white/[0.06]">
                 <span className="text-[var(--text-tertiary)]">Active Modules</span>
@@ -497,7 +654,7 @@ export default function OnboardingPage() {
         )}
 
         {/* BOTTOM NAVIGATION CONTROLS */}
-        {step < 4 && (
+        {step < 5 && (
           <div className="flex items-center justify-between pt-10 border-t border-black/[0.06] dark:border-white/[0.08] mt-8">
             {step > 1 ? (
               <button
@@ -517,7 +674,7 @@ export default function OnboardingPage() {
               onClick={() => setStep(step + 1)}
               className="btn-primary text-xs px-6"
             >
-              <span>{step === 3 ? 'Review & Launch' : 'Continue'}</span>
+              <span>{step === 4 ? 'Review & Launch' : 'Continue'}</span>
               <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
