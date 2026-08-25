@@ -1,6 +1,17 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  OAuthProvider, 
+  signOut as firebaseSignOut, 
+  onAuthStateChanged,
+  updateProfile
+} from 'firebase/auth';
+import { auth } from './firebase';
 
 // --- Auth & Session ---
 export interface UserSession {
@@ -462,6 +473,27 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  // Listen to Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        const userSession: UserSession = {
+          name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Hotel Manager',
+          email: firebaseUser.email || '',
+          role: 'General Manager',
+          avatar: (firebaseUser.displayName || firebaseUser.email || 'HM').substring(0, 2).toUpperCase(),
+          property: activeProperty.name,
+        };
+        setSession(userSession);
+        try {
+          localStorage.setItem('hotelhub_session', JSON.stringify(userSession));
+        } catch (e) {}
+      }
+    });
+
+    return () => unsubscribe();
+  }, [activeProperty.name]);
+
   // Save changes to localStorage
   useEffect(() => {
     try {
@@ -568,7 +600,13 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await firebaseSignOut(auth);
+    } catch (e) {
+      console.warn('Firebase signout note:', e);
+    }
+
     const emptySession = {
       name: '',
       email: '',
@@ -583,7 +621,15 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/login';
   };
 
-  const login = (email: string, password?: string, customUser?: Partial<UserSession>) => {
+  const login = async (email: string, password?: string, customUser?: Partial<UserSession>) => {
+    try {
+      if (password) {
+        await signInWithEmailAndPassword(auth, email, password);
+      }
+    } catch (e) {
+      console.warn('Firebase login fallback / demo mode active:', e);
+    }
+
     const foundUser = registeredUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
     
     let newSession: UserSession;
@@ -638,7 +684,18 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/dashboard';
   };
 
-  const signup = (userData: { name: string; email: string; role?: string; property?: string; password?: string }) => {
+  const signup = async (userData: { name: string; email: string; role?: string; property?: string; password?: string }) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password || 'password123');
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: userData.name,
+        });
+      }
+    } catch (e) {
+      console.warn('Firebase signup fallback / demo mode active:', e);
+    }
+
     const newUser: UserAccount = {
       name: userData.name,
       email: userData.email,
@@ -667,7 +724,33 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/onboarding';
   };
 
-  const loginWithOAuth = (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => {
+  const loginWithOAuth = async (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => {
+    try {
+      const oAuthProvider = provider === 'google' 
+        ? new GoogleAuthProvider() 
+        : new OAuthProvider('apple.com');
+
+      const result = await signInWithPopup(auth, oAuthProvider);
+      if (result?.user) {
+        const user = result.user;
+        const oauthSession: UserSession = {
+          name: user.displayName || accountDetails?.name || 'Hotel Manager',
+          email: user.email || accountDetails?.email || 'user@hotelhub.com',
+          role: 'General Manager',
+          avatar: (user.displayName || 'G').substring(0, 2).toUpperCase(),
+          property: activeProperty.name,
+        };
+        setSession(oauthSession);
+        try {
+          localStorage.setItem('hotelhub_session', JSON.stringify(oauthSession));
+        } catch (e) {}
+        window.location.href = '/onboarding';
+        return;
+      }
+    } catch (e) {
+      console.warn('Firebase OAuth fallback / demo mode active:', e);
+    }
+
     let oauthSession: UserSession;
     if (provider === 'google') {
       oauthSession = {
@@ -691,7 +774,7 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.setItem('hotelhub_session', JSON.stringify(oauthSession));
     } catch (e) {}
-    window.location.href = '/dashboard';
+    window.location.href = '/onboarding';
   };
 
   const registerNewProperty = (propertyData: { name: string; rooms: number; type?: string; location?: string }) => {
