@@ -87,6 +87,13 @@ export default function OnboardingPage() {
 
   const handleFinishOnboarding = () => {
     setIsFinishing(true);
+    if (store?.registerNewProperty) {
+      store.registerNewProperty({
+        name: propertyName,
+        rooms: roomCount,
+        type: propertyType,
+      });
+    }
     setTimeout(() => {
       router.push('/dashboard');
     }, 1200);

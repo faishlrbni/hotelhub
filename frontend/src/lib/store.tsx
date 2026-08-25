@@ -405,6 +405,7 @@ interface HotelContextType {
   login: (email: string, password?: string, customUser?: Partial<UserSession>) => void;
   signup: (userData: { name: string; email: string; role?: string; property?: string; password?: string }) => void;
   loginWithOAuth: (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => void;
+  registerNewProperty: (propertyData: { name: string; rooms: number; type?: string; location?: string }) => void;
   registeredUsers: UserAccount[];
 }
 
@@ -413,6 +414,7 @@ const HotelContext = createContext<HotelContextType | undefined>(undefined);
 export function HotelProvider({ children }: { children: React.ReactNode }) {
   // 1. Session & Property
   const [session, setSession] = useState<UserSession>(DEFAULT_SESSION);
+  const [properties, setProperties] = useState<PropertyItem[]>(DEFAULT_PROPERTIES);
   const [activeProperty, setActiveProperty] = useState<PropertyItem>(DEFAULT_PROPERTIES[0]);
 
   // 2. Data Lists
@@ -429,6 +431,12 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
   // Load from localStorage on mount
   useEffect(() => {
     try {
+      const savedProps = localStorage.getItem('hotelhub_properties');
+      if (savedProps) setProperties(JSON.parse(savedProps));
+
+      const savedActiveProp = localStorage.getItem('hotelhub_active_property');
+      if (savedActiveProp) setActiveProperty(JSON.parse(savedActiveProp));
+
       const savedRes = localStorage.getItem('hotelhub_reservations');
       if (savedRes) setReservations(JSON.parse(savedRes));
 
@@ -457,6 +465,8 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
   // Save changes to localStorage
   useEffect(() => {
     try {
+      localStorage.setItem('hotelhub_properties', JSON.stringify(properties));
+      localStorage.setItem('hotelhub_active_property', JSON.stringify(activeProperty));
       localStorage.setItem('hotelhub_reservations', JSON.stringify(reservations));
       localStorage.setItem('hotelhub_rooms', JSON.stringify(rooms));
       localStorage.setItem('hotelhub_housekeeping', JSON.stringify(housekeeping));
@@ -467,7 +477,7 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.error('LocalStorage save error:', e);
     }
-  }, [reservations, rooms, housekeeping, reviews, campaigns, registeredUsers, session]);
+  }, [properties, activeProperty, reservations, rooms, housekeeping, reviews, campaigns, registeredUsers, session]);
 
   // Action Helpers
   const addReservation = (res: Omit<Reservation, 'id' | 'ref'>) => {
@@ -684,13 +694,69 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/dashboard';
   };
 
+  const registerNewProperty = (propertyData: { name: string; rooms: number; type?: string; location?: string }) => {
+    const propName = propertyData.name || 'Imperial Resort Jakarta';
+    const propRooms = propertyData.rooms || 48;
+
+    const newProp: PropertyItem = {
+      id: `prop-${Date.now()}`,
+      name: propName,
+      rooms: propRooms,
+      location: propertyData.location || 'Primary Location',
+    };
+
+    setProperties((prev) => {
+      const exists = prev.some((p) => p.name.toLowerCase() === propName.toLowerCase());
+      return exists ? prev : [newProp, ...prev];
+    });
+
+    setActiveProperty(newProp);
+
+    setSession((prev) => {
+      const updated = {
+        ...prev,
+        property: propName,
+      };
+      try {
+        localStorage.setItem('hotelhub_session', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+
+    // Seed rooms inventory matching propRooms
+    const categories: RoomItem['category'][] = ['Ocean Suite', 'Deluxe', 'Standard', 'Suite', 'Garden Villa', 'Executive'];
+    const generatedRooms: RoomItem[] = Array.from({ length: propRooms }, (_, i) => {
+      const roomNum = 101 + i;
+      const cat = categories[i % categories.length];
+      const statusPool: RoomItem['status'][] = ['Ready', 'Occupied', 'Dirty', 'Ready', 'Ready'];
+      const status = statusPool[i % statusPool.length];
+      return {
+        number: roomNum,
+        name: `${cat} ${roomNum}`,
+        category: cat,
+        floor: Math.floor(i / 10) + 1,
+        status: status,
+        guestName: status === 'Occupied' ? (i % 2 === 0 ? 'Alexander Wright' : 'Siti Rahma') : undefined,
+        vip: i % 3 === 0,
+        etaNote: status === 'Dirty' ? 'Housekeeping requested' : status === 'Occupied' ? 'Departure tomorrow' : 'Inspected & Ready',
+      };
+    });
+
+    setRooms(generatedRooms);
+
+    try {
+      localStorage.setItem('hotelhub_active_property', JSON.stringify(newProp));
+      localStorage.setItem('hotelhub_rooms', JSON.stringify(generatedRooms));
+    } catch (e) {}
+  };
+
   return (
     <HotelContext.Provider
       value={{
         session,
         setSession,
         activeProperty,
-        properties: DEFAULT_PROPERTIES,
+        properties,
         setActiveProperty,
         reservations,
         addReservation,
@@ -714,6 +780,7 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
         login,
         signup,
         loginWithOAuth,
+        registerNewProperty,
         registeredUsers,
       }}
     >
