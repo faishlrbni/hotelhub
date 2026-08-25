@@ -46,29 +46,27 @@ export default function SignupPage() {
   const triggerGoogleOAuth = async () => {
     setIsLoading(true);
     try {
-      await signIn('google', { callbackUrl: '/dashboard', redirect: false });
-    } catch (e) {}
-
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'demo-client-id'}&redirect_uri=${encodeURIComponent(window.location.origin + '/api/auth/callback/google')}&scope=openid%20email%20profile`;
-    window.open(googleAuthUrl, 'GoogleAuth', 'width=500,height=600');
-
-    setTimeout(() => {
-      loginWithOAuth?.('google', { name: fullName || 'Google User', email: workEmail || 'user.google@gmail.com' });
-    }, 1500);
+      if (loginWithOAuth) {
+        await loginWithOAuth('google', { name: fullName || 'Google User', email: workEmail });
+      }
+    } catch (e) {
+      console.warn('OAuth signup error:', e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const triggerAppleOAuth = async () => {
     setIsLoading(true);
     try {
-      await signIn('apple', { callbackUrl: '/dashboard', redirect: false });
-    } catch (e) {}
-
-    const appleAuthUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_APPLE_ID || 'com.hotelhub.app'}&redirect_uri=${encodeURIComponent(window.location.origin + '/api/auth/callback/apple')}&scope=name%20email&response_mode=form_post`;
-    window.open(appleAuthUrl, 'AppleAuth', 'width=500,height=600');
-
-    setTimeout(() => {
-      loginWithOAuth?.('apple', { name: fullName || 'Apple User', email: workEmail || 'user.apple@icloud.com' });
-    }, 1500);
+      if (loginWithOAuth) {
+        await loginWithOAuth('apple', { name: fullName || 'Apple User', email: workEmail });
+      }
+    } catch (e) {
+      console.warn('Apple OAuth signup error:', e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

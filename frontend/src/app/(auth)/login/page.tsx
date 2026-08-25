@@ -38,45 +38,32 @@ export default function LoginPage() {
     }, 400);
   };
 
-  // Triggers official Google OAuth 2.0 authentication flow
+  // Triggers official Google OAuth authentication flow via Firebase
   const triggerGoogleOAuth = async () => {
     setIsLoading(true);
     try {
-      // 1. Trigger NextAuth Google Provider redirect
-      await signIn('google', { callbackUrl: '/dashboard', redirect: false });
+      if (loginWithOAuth) {
+        await loginWithOAuth('google', { name: oauthName, email: oauthEmail });
+      }
     } catch (e) {
-      console.warn('NextAuth redirect fallback:', e);
+      console.warn('OAuth trigger error:', e);
+    } finally {
+      setIsLoading(false);
     }
-
-    // 2. Open Google Accounts authentication window
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || 'demo-client-id'}&redirect_uri=${encodeURIComponent(window.location.origin + '/api/auth/callback/google')}&scope=openid%20email%20profile`;
-    window.open(googleAuthUrl, 'GoogleAuth', 'width=500,height=600');
-
-    // 3. Fallback state login if popup closes
-    setTimeout(() => {
-      const targetEmail = oauthEmail || 'user.google@gmail.com';
-      const targetName = oauthName || 'Google User';
-      loginWithOAuth?.('google', { name: targetName, email: targetEmail });
-    }, 1500);
   };
 
-  // Triggers official Apple ID authentication flow
+  // Triggers official Apple ID authentication flow via Firebase
   const triggerAppleOAuth = async () => {
     setIsLoading(true);
     try {
-      await signIn('apple', { callbackUrl: '/dashboard', redirect: false });
+      if (loginWithOAuth) {
+        await loginWithOAuth('apple', { name: oauthName, email: oauthEmail });
+      }
     } catch (e) {
-      console.warn('NextAuth Apple fallback:', e);
+      console.warn('Apple OAuth trigger error:', e);
+    } finally {
+      setIsLoading(false);
     }
-
-    const appleAuthUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_APPLE_ID || 'com.hotelhub.app'}&redirect_uri=${encodeURIComponent(window.location.origin + '/api/auth/callback/apple')}&scope=name%20email&response_mode=form_post`;
-    window.open(appleAuthUrl, 'AppleAuth', 'width=500,height=600');
-
-    setTimeout(() => {
-      const targetEmail = oauthEmail || 'user.apple@icloud.com';
-      const targetName = oauthName || 'Apple User';
-      loginWithOAuth?.('apple', { name: targetName, email: targetEmail });
-    }, 1500);
   };
 
   const handleOAuthSubmit = (e: React.FormEvent) => {
