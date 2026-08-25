@@ -38,7 +38,7 @@ export default function SignupPage() {
           password: password,
         });
       } else {
-        window.location.href = '/dashboard';
+        window.location.href = '/onboarding';
       }
     }, 400);
   };

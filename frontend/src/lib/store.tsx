@@ -640,13 +640,21 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     };
 
     setRegisteredUsers((prev) => [newUser, ...prev]);
-    login(userData.email, userData.password, {
+    
+    const newSession: UserSession = {
       name: userData.name,
       email: userData.email,
       role: userData.role || 'General Manager',
-      avatar: newUser.avatar,
+      avatar: newUser.avatar || 'HM',
       property: userData.property || activeProperty.name,
-    });
+    };
+
+    setSession(newSession);
+    try {
+      localStorage.setItem('hotelhub_session', JSON.stringify(newSession));
+    } catch (e) {}
+
+    window.location.href = '/onboarding';
   };
 
   const loginWithOAuth = (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => {
