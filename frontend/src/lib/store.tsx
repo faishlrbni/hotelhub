@@ -622,12 +622,18 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
   };
 
   const login = async (email: string, password?: string, customUser?: Partial<UserSession>) => {
+    let firebaseErrorMsg = '';
     try {
-      if (password) {
+      if (password && email) {
         await signInWithEmailAndPassword(auth, email, password);
       }
-    } catch (e) {
-      console.warn('Firebase login fallback / demo mode active:', e);
+    } catch (e: any) {
+      console.warn('Firebase login warning:', e);
+      if (e.code === 'auth/operation-not-allowed') {
+        firebaseErrorMsg = 'Firebase Email/Password sign-in is disabled in Firebase Console.';
+      } else if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+        firebaseErrorMsg = 'Invalid email or password.';
+      }
     }
 
     const foundUser = registeredUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
@@ -682,18 +688,29 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('hotelhub_session', JSON.stringify(newSession));
     } catch (e) {}
     window.location.href = '/dashboard';
+    return { success: true, error: firebaseErrorMsg };
   };
 
   const signup = async (userData: { name: string; email: string; role?: string; property?: string; password?: string }) => {
+    let firebaseErrorMsg = '';
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password || 'password123');
-      if (userCredential.user) {
-        await updateProfile(userCredential.user, {
-          displayName: userData.name,
-        });
+      if (userData.email && userData.password) {
+        const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
+        if (userCredential.user) {
+          await updateProfile(userCredential.user, {
+            displayName: userData.name,
+          });
+        }
       }
-    } catch (e) {
-      console.warn('Firebase signup fallback / demo mode active:', e);
+    } catch (e: any) {
+      console.warn('Firebase signup warning:', e);
+      if (e.code === 'auth/email-already-in-use') {
+        firebaseErrorMsg = 'This email is already registered in Firebase.';
+      } else if (e.code === 'auth/weak-password') {
+        firebaseErrorMsg = 'Password should be at least 6 characters.';
+      } else if (e.code === 'auth/operation-not-allowed') {
+        firebaseErrorMsg = 'Email/Password sign-in is disabled in Firebase Console.';
+      }
     }
 
     const newUser: UserAccount = {
@@ -722,6 +739,7 @@ export function HotelProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {}
 
     window.location.href = '/onboarding';
+    return { success: true, error: firebaseErrorMsg };
   };
 
   const loginWithOAuth = async (provider: 'google' | 'apple', accountDetails?: { name?: string; email?: string }) => {
